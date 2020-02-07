@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.3.0  -->
+<!-- 2018-10-23T17:32:39 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporte_facturas_mensajeros" language="groovy" pageWidth="595" pageHeight="842" columnWidth="585" leftMargin="5" rightMargin="5" topMargin="5" bottomMargin="40" uuid="2c4b3028-321d-44ad-a4b2-0400f4033262">
+	<property name="ireport.zoom" value="1.100000000000001"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="empresa" class="java.lang.String"/>
+	<parameter name="direccion" class="java.lang.String"/>
+	<parameter name="fecha" class="java.sql.Timestamp"/>
+	<parameter name="hora" class="java.sql.Timestamp"/>
+	<parameter name="titulo" class="java.lang.String"/>
+	<parameter name="usuario" class="java.lang.String"/>
+	<parameter name="fecha1" class="java.util.Date"/>
+	<parameter name="fecha2" class="java.util.Date"/>
+	<field name="hecho_por" class="java.lang.String"/>
+	<field name="fecha" class="java.sql.Timestamp"/>
+	<field name="empresa" class="java.lang.String"/>
+	<field name="fechahoy" class="java.sql.Timestamp"/>
+	<field name="header" class="java.lang.String"/>
+	<field name="web" class="java.lang.String"/>
+	<field name="cliente" class="java.lang.String"/>
+	<field name="total" class="java.math.BigDecimal"/>
+	<field name="mensajero" class="java.lang.String"/>
+	<field name="fecha1" class="java.sql.Timestamp"/>
+	<field name="fecha2" class="java.sql.Timestamp"/>
+	<field name="direccion" class="java.lang.String"/>
+	<variable name="suma_por_mensajero" class="java.math.BigDecimal" resetType="Group" resetGroup="grupo_datos" calculation="Sum">
+		<variableExpression><![CDATA[$F{total}]]></variableExpression>
+	</variable>
+	<group name="grupo_datos">
+		<groupExpression><![CDATA[$F{mensajero}]]></groupExpression>
+		<groupHeader>
+			<band height="51">
+				<staticText>
+					<reportElement x="2" y="28" width="100" height="20" uuid="06c8f3f8-0bab-4928-8d91-65793907f04e"/>
+					<textElement>
+						<font fontName="Arial" size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[CLIENTE]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="324" y="28" width="100" height="20" uuid="f32d1bd0-4522-46f0-9495-85678721d0be"/>
+					<textElement>
+						<font fontName="Arial" size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[FECHA]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="141" y="28" width="100" height="20" uuid="86038ae9-86c9-4a57-bda4-c7b751c02864"/>
+					<textElement>
+						<font fontName="Arial" size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[DIRECCION]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="434" y="28" width="100" height="20" uuid="2b51af0f-f3d9-44da-9301-73b727e6b98b"/>
+					<textElement>
+						<font fontName="Arial" size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[TOTAL]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="3" y="0" width="119" height="20" uuid="460d327a-1274-4fb1-b324-e4aee8fcaa94"/>
+					<textElement>
+						<font fontName="Arial" size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[MENSAJERO-->]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="119" y="0" width="224" height="20" uuid="9fe3fb7b-8931-424c-bbf7-675c926acd93"/>
+					<textElement>
+						<font fontName="Arial" size="14" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{mensajero}]]></textFieldExpression>
+				</textField>
+				<rectangle>
+					<reportElement mode="Transparent" x="1" y="27" width="583" height="21" uuid="f84543c3-68ef-4f63-b9f2-4d74c4162b7c"/>
+				</rectangle>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="25">
+				<line>
+					<reportElement x="1" y="2" width="583" height="1" uuid="2fbf0660-799a-46ba-b0a6-de8238aefb65"/>
+					<graphicElement>
+						<pen lineStyle="Dashed"/>
+					</graphicElement>
+				</line>
+				<line>
+					<reportElement x="440" y="20" width="94" height="1" uuid="5933f6e5-adf3-4dbc-816c-665e41672ab9"/>
+				</line>
+				<staticText>
+					<reportElement x="395" y="8" width="49" height="17" uuid="fd447429-8442-43ca-b55d-6c374354ee65"/>
+					<textElement>
+						<font fontName="Arial" size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[TOTAL]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" pattern="RD¤: #,##0.00" isBlankWhenNull="true">
+					<reportElement x="444" y="8" width="90" height="12" uuid="cfa51cf3-3873-48b4-ad44-70b1c9c91b89"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{suma_por_mensajero}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="155" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="116" width="57" height="20" uuid="23c724d0-39ba-4afb-9d25-7469a3ef1b39"/>
+				<textElement>
+					<font fontName="Arial" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DESDE :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="165" y="116" width="59" height="20" uuid="41ee2ef1-16f1-4fed-866d-3026a678f285"/>
+				<textElement>
+					<font fontName="Arial" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HASTA :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="11" y="10" width="294" height="20" uuid="870c5b44-4dd8-4a73-9a8f-d44fa8e03cba"/>
+				<textElement>
+					<font fontName="SansSerif" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{empresa}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="455" y="10" width="40" height="15" uuid="5d52b75f-10a0-44d4-a4c1-fb19d2383572"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="463" y="27" width="32" height="15" uuid="68b7e4f2-5e00-44df-afa3-ebb30f84652c"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Hora :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="449" y="44" width="46" height="15" uuid="82a92981-ee51-4986-84dc-d37f36a781e0"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Usuario :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="504" y="10" width="72" height="14" uuid="3c9e0a92-4beb-4230-93ff-ffe0758a8f24"/>
+				<textFieldExpression><![CDATA[$P{fecha}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="10" y="30" width="280" height="29" uuid="8d92b3c9-dcf9-46bd-801b-0ae66474b53b"/>
+				<textFieldExpression><![CDATA[$P{direccion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1" y="70" width="581" height="30" uuid="6826ae86-f43c-48bc-bf60-7119ae3ae5de"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{titulo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="504" y="28" width="72" height="14" uuid="ffdca304-b61f-4930-8c66-b9cdc66b6b28"/>
+				<textFieldExpression><![CDATA[$P{hora}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="504" y="44" width="72" height="14" uuid="64fc3931-ea24-4d57-b3e6-05fcf702627e">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$P{usuario}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="63" y="115" width="58" height="20" uuid="e3be8a96-7264-42a9-92bb-293f2ac56935"/>
+				<textFieldExpression><![CDATA[$P{fecha1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="230" y="116" width="58" height="20" uuid="11ec2180-edbe-4fbd-87fd-277784fe91b0">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$P{fecha2}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="18" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="2" y="0" width="130" height="15" uuid="e5f01056-264e-4e70-8ef0-69eb308c27e4"/>
+				<textElement>
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cliente}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="yyyy/MM/dd  hh:mm a" isBlankWhenNull="true">
+				<reportElement x="324" y="0" width="110" height="15" uuid="a1713b29-d62b-4d75-aa43-fd9c1264150b"/>
+				<textElement>
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="RD¤: #,##0.00" isBlankWhenNull="true">
+				<reportElement x="434" y="0" width="100" height="15" uuid="2f632abe-518b-42ba-ae9f-304be72e1e3b"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="141" y="0" width="183" height="15" uuid="e555ec91-2986-4d07-9bf0-5c4931cc813d"/>
+				<textElement>
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{direccion}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="26" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="17" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="484" y="2" width="100" height="15" uuid="fb098d02-6e6a-4313-9f8d-5fe0d5d8da07"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{web}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="74" splitType="Stretch"/>
+	</summary>
+</jasperReport>

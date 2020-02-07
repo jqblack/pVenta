@@ -1,0 +1,1661 @@
+﻿Build1=Default,com.jq
+File1=carrito2log.png
+File10=frmDirecionUSA.bil
+File11=frmFavoritos.bil
+File12=frmItemsDir.bil
+File13=frmLeft.bil
+File14=frmLogin.bil
+File15=frmPanelesItems.bil
+File16=frmPerfil.bil
+File17=frmPrincipal.bil
+File18=frmProductoByCategoria.bil
+File19=frmProductoOrden.bil
+File2=collageHd.png
+File20=frmProductosOpciones.bil
+File21=frmRegistarCliente.bil
+File22=frmReportesOrdenes.bil
+File23=frmSlideNew.bil
+File24=hamburger.png
+File25=heartred.png
+File26=heartwhiteandblack.png
+File27=houseHd.png
+File28=location-pin.png
+File29=logojq.jpg
+File3=conversationHd.png
+File30=logoutHd.png
+File31=love Hd.png
+File32=mapHd.png
+File33=no-image.jpg
+File34=receiverHd.png
+File35=user32.png
+File4=fondo2.jpg
+File5=food.jpg
+File6=frmAboutsUs.bil
+File7=frmCategoria.bil
+File8=frmDetalleProducto.bil
+File9=frmDirecciones.bil
+FileGroup1=Default Group
+FileGroup10=Default Group
+FileGroup11=Default Group
+FileGroup12=Default Group
+FileGroup13=Default Group
+FileGroup14=Default Group
+FileGroup15=Default Group
+FileGroup16=Default Group
+FileGroup17=Default Group
+FileGroup18=Default Group
+FileGroup19=Default Group
+FileGroup2=Default Group
+FileGroup20=Default Group
+FileGroup21=Default Group
+FileGroup22=Default Group
+FileGroup23=Default Group
+FileGroup24=Default Group
+FileGroup25=Default Group
+FileGroup26=Default Group
+FileGroup27=Default Group
+FileGroup28=Default Group
+FileGroup29=Default Group
+FileGroup3=Default Group
+FileGroup30=Default Group
+FileGroup31=Default Group
+FileGroup32=Default Group
+FileGroup33=Default Group
+FileGroup34=Default Group
+FileGroup35=Default Group
+FileGroup4=Default Group
+FileGroup5=Default Group
+FileGroup6=Default Group
+FileGroup7=Default Group
+FileGroup8=Default Group
+FileGroup9=Default Group
+Group=Default Group
+Library1=icore
+Library10=iphone
+Library11=isidemenu
+Library2=ihud
+Library3=ixui
+Library4=itableview
+Library5=ihttp
+Library6=ihttputils2
+Library7=ijson
+Library8=istringutils
+Library9=isql
+Module1=Login
+Module10=Favoritos
+Module11=B4XDrawer
+Module2=funciones
+Module3=Categoria
+Module4=Reportes
+Module5=Facturacion
+Module6=Direcciones
+Module7=CustomListView
+Module8=Perfil
+Module9=B4XComboBox
+NumberOfFiles=35
+NumberOfLibraries=11
+NumberOfModules=11
+Version=6
+@EndOfDesignText@
+'Code module
+#Region  Project Attributes 
+	#ApplicationLabel: Market
+	#Version: 1.0.4
+	'Orientation possible values: Portrait, LandscapeLeft, LandscapeRight and PortraitUpsideDown
+	#iPhoneOrientations: Portrait
+'	#iPadOrientations: Portrait, LandscapeLeft, LandscapeRight, PortraitUpsideDown
+	#Target: iPhone
+	#ATSEnabled : True
+	#MinVersion: 7
+	
+	#CertificateFile: ios_development.cer
+	#ProvisionFile: randydeveloper.mobileprovision
+	
+'	#CertificateFile: ios_distribution.cer
+'	#ProvisionFile: produccionpedidos.mobileprovision
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'Public variables can be accessed from all modules.
+	Public App As Application
+	Public NavControl As NavigationController
+	Private Page1 As Page
+	Private pageDetalle As Page
+	Private pageAboutUs As Page 
+	
+	'GLOBALES
+	Dim tokenPublico As String = "dbea1e74de894c3a37f4696a10ed6dd7"
+	Dim token As String
+	Dim isLoged As Boolean = False
+	Dim listafavoritos As List
+	Dim mapEmpresaInfo As Map = Null
+	Dim url As String '= "http://10.0.0.108:8010/menube_app_server_pedidos_ios/"
+	'Dim url As String = "http://162.211.121.18:8090/menube_app_server_ios/"
+	Dim idEmpresa As Int = 1053 '1000
+	Dim jobMsj As String = "No se pudo conectar con el servidor. Compruebe su conexión a internet."
+	Dim jobMsjTitle As String = "Problemas de conexión"
+	Dim impuestoIncluido As Boolean = True
+	Dim cantidadProduto As Int = 0
+	Dim mapaDetalle As Map
+	Dim SQL As SQL
+	Dim  imei As String
+	Dim operadora As String
+	Dim CargarAgain As Boolean = True
+	Dim reload As Boolean = False
+	
+	'DATOS DEL USUARIO
+	Type typeU (idUsuario As Int, nombre As String, latitud As String, longitud As String)
+	Dim usersData As typeU
+	
+	Dim IsUsa As Boolean = False
+	
+	Dim mapaDetalleImagen As Map 
+	
+	
+	'SLIDE MENU
+	Private Drawer As B4XDrawer
+	Private ListSlide As CustomListView
+	Private btnPrincipalBack As Button
+	Private btnBuscarProducto As Button
+	Private btnIniciarSecion As Button
+	Private btnOrden As Button
+	Private PanelFooterv2 As Panel
+	Private PanelTitulo As Panel
+	Private lblCantidadProductos As Label
+	Private btnMasVendido As Button
+	Private PanelSlide As Panel
+
+	'BUSCAR PRODUCTOS 
+	Private hud As HUD
+	Private hud2 As HUD
+
+	Private Panel1 As Panel
+	Private txtBuscarProducto As TextField
+	Private btnProductoBuscarModal As Button
+	Private PanelProductosModalView As Panel
+	Private btnProductoVolver As Button
+	Private PanelModalProducto As Panel
+	Private ViewCategoria As ScrollView
+	
+	'SCROLL HORIZONTAL ?
+	Dim Hscroll As ScrollView
+	Private PanelUser As Panel
+	Private imageUser As ImageView
+	
+	
+	Public smc As SideMenuController
+	Private Panel2 As Panel
+	Private Panel3 As Panel
+	Private Panel4 As Panel
+	Private Panel5 As Panel
+	Private Panel6 As Panel
+	Private  Panel7 As Panel
+	Private PanelFondoDetalles As Panel
+	Private ImageViewDetalles As ImageView
+	Private lblPrecioEncabezado As Label
+	Private lblNombeEncabezado As Label
+	Private imgdetallefav As ImageView
+	Private lblPrecio As Label
+	Private lblcantidad As Label
+	Private btnBackDetalles As Button
+	Private btnagregarCarritoDetalle As Button
+	Private btnless As Button
+	Private btnMore As Button
+	Private PanelImagenDetalles As Panel
+	Private PanellblCantidad As Panel
+	Private PanelEncabezadoDetalles As Panel
+	Private btnBackAboutus As Button
+	
+	'PARA SABER SI RECARGAR LA PAGINA
+	Dim buscarfavoritosvar As Boolean = True
+
+	Private PanelCategoria As Panel
+	Private StepperCantidad As Stepper
+	Private lblNombreUser As Label
+	Private lblEmailUser As Label
+	Private ListaBusquedaPro As CustomListView
+	Private imgCat As ImageView
+	Private lblNomCat As Label
+	Private lblCantCat As Label
+End Sub
+
+Sub crearPanel As Panel 
+	
+	Dim p As Panel
+	p.Initialize("")
+	
+	Dim img As Bitmap
+	img.Initialize(File.DirAssets,"user32.png")
+	
+	p.AddView(img,0%x,0%y,15%x,15%y)
+	
+	
+	
+	Return p
+	
+End Sub
+
+Private Sub Application_Start (Nav As NavigationController)
+	'SetDebugAutoFlushLogs(True) 'Uncomment if program crashes before all logs are printed.
+	
+	If File.Exists(File.DirDocuments, "db.db") = False Then
+		File.Copy(File.DirAssets, "db.db", File.DirDocuments, "db.db")
+	End If
+	SQL.Initialize(File.DirDocuments, "db.db", False)
+	
+	Dim rs As ResultSet = SQL.ExecQuery("SELECT * FROM t_preferencia")
+	Do While rs.NextRow
+		url = rs.GetString("f_url")
+	Loop
+	
+	Dim device As NativeObject
+	device = device.Initialize("UIDevice").RunMethod("currentDevice", Null)
+	operadora= App.OSVersion
+	imei = device.GetField("identifierForVendor").AsString
+		
+'		Msgbox(url,"")
+	Initialize
+
+End Sub
+
+
+Sub Initialize
+	
+'	NavControl.ShowPage(Page1)
+	
+	
+	Dim nc As NavigationController
+	nc.Initialize("nc")
+	NavControl = nc
+	Page1.Initialize("Page1")
+	Page1.Title = "Page 1"
+	
+	NavControl.NavigationBarVisible = False
+	Page1.RootPanel.Color = Colors.White
+	
+	
+	Page1.RootPanel.Color = Colors.White
+	Page1.RootPanel.LoadLayout("frmPrincipal")
+	Dim lp As Page
+	lp.Initialize("lp")
+	lp.RootPanel.Color = Colors.Red
+	lp.RootPanel.LoadLayout("frmSlideNew")
+	smc.Initialize(lp, nc,Null)
+	App.KeyController = smc
+	NavControl.ShowPage(Page1)
+	
+	
+	'PREGUNTAR SI HAY PARA PONERLO FALSE O NO XD
+	lblCantidadProductos.Visible = False
+	
+	'SOMBRAS
+	PanelTitulo.SetShadow(Colors.Gray,0dip,2dip,0.3,True)
+   
+	btnMasVendido.SetShadow(Colors.Gray,0dip,2dip,0.2,True)
+	btnBuscarProducto.SetShadow(Colors.Gray,0dip,2dip,0.2,True)
+	
+	PanelFooterv2.SetShadow(Colors.Gray,0dip,-2dip,0.3,True)
+	
+	btnIniciarSecion.SetShadow(Colors.Gray,1dip,2dip,0.2,True)
+	
+	'SOMBRAS DEL SLIDE
+	Panel1.SetShadow(Colors.Gray,0dip,2dip,0.2,True)
+	Panel2.SetShadow(Colors.Gray,0dip,2dip,0.2,True)
+	Panel3.SetShadow(Colors.Gray,0dip,2dip,0.2,True)
+	Panel4.SetShadow(Colors.Gray,0dip,2dip,0.2,True)
+	Panel5.SetShadow(Colors.Gray,0dip,2dip,0.2,True)
+	Panel6.SetShadow(Colors.Gray,0dip,2dip,0.2,True)
+	Panel7.SetShadow(Colors.Gray,0dip,2dip,0.2,True)
+	
+	Dim bmUser As Bitmap
+	bmUser.Initialize(File.DirAssets,"user32.png")
+
+	imageUser.Bitmap =bmUser
+	
+	'CARGAR LOS PRODUCTOS
+	'quitarlo o solucionarlo
+	'If CargarAgain Then
+		
+		hud2.ProgressDialogShow("Cargando productos...")
+		If isLoged Then
+			
+		Panel7.Visible = True
+			BuscarFavoritos
+			CargarAgain = True
+			btnIniciarSecion.Text = usersData.nombre
+			Dim JobEmpresaInfo As HttpJob
+			JobEmpresaInfo.Initialize("JobEmpresaInfo",Me)
+			JobEmpresaInfo.PostString(url&"ws/get_datos_preferencia","json="&funciones.crearJson(token,"'f_idempresa':"&idEmpresa))
+		Else
+			Panel7.Visible = False
+			cargarDatos
+		End If
+		
+	'End If
+
+	
+	Dim json As String
+	json = "'f_imei':"&imei
+	
+	Dim cantidadPro As HttpJob
+	cantidadPro.Initialize("cantidadPro",Me)
+	cantidadPro.PostString(url&"puntoventa/get_canitdad_producto_Login","json="&funciones.crearJson(tokenPublico,json))
+	
+	If isLoged Then
+		lblNombreUser.Text = usersData.nombre
+		lblEmailUser.Text = Login.correro
+	End If
+
+	reload = False
+	smc.Tag = "inicio"
+End Sub
+
+Sub BuscarFavoritos
+	
+	Dim json As String = "'f_idusuario':"&usersData.idUsuario& _
+	",'f_idempresa':"&1000
+	Dim jobFavoritos As HttpJob
+	jobFavoritos.Initialize("buscarFavoritos",Me)
+	jobFavoritos.PostString(url&"puntoventa/buscarfav","json="&funciones.crearJson(token,json))
+	
+End Sub
+
+Private Sub Page1_Resize(Width As Int, Height As Int)
+	
+	'ES COMO UN RESUME ACTIVITY SEGUN VEO
+	ViewCategoria.ContentWidth =  PanelCategoria.Width - 4%x
+
+End Sub
+
+Sub Page1_Click
+	
+End Sub
+
+Sub btnPrincipalBack_Click
+
+	smc.OpenLeftMenu
+
+End Sub
+
+
+
+
+Private Sub Application_Background
+	
+End Sub
+
+
+Sub btnIniciarSecion_Click
+	If isLoged Then
+		Return
+		Else
+		Login.Initialize
+	End If
+
+End Sub
+
+
+Sub cargarDatos
+'	If actu Then
+'		ViewCategoria.Panel.RemoveAllViews
+'	End If
+	'ViewCategoria.Panel.RemoveAllViews  Rapidez a cambio ?
+	cargarMasVendido
+
+End Sub
+
+Sub cargarMasVendido
+	
+	Dim json As String
+	json = "'f_idempresa':"&idEmpresa
+	Dim JobProductoMasVendido As HttpJob
+	JobProductoMasVendido.Initialize("JobProductoMasVendido",Me)
+	JobProductoMasVendido.PostString(url&"ws/get_productos_main_page","json="&funciones.crearJson(tokenPublico,json))
+	
+End Sub
+
+Sub cargarAllProductos
+	
+	Dim json As String
+	json = "'f_idempresa':"&idEmpresa&",'f_parametro':'%'"
+	
+	Dim JobBuscarProducto As HttpJob
+	JobBuscarProducto.Initialize("JobBuscarProductoALL",Me)
+	JobBuscarProducto.PostString(url&"ws/get_productos_by_paramentros2","json="&funciones.crearJson(tokenPublico,json))
+	
+End Sub
+
+
+Sub btnOrden_Click
+	
+	Facturacion.Initialize
+	
+End Sub
+
+Sub btnBuscarProducto_Click
+	
+	PanelModalProducto.Left = 0
+	PanelModalProducto.SetAlphaAnimated(500,1)
+	'Main.NavControl.SetNavigationBarVisibleAnimated(False)
+	
+	txtBuscarProducto.RequestFocus
+	
+End Sub
+
+
+Sub btnProductoBuscarModal_Click
+	
+	If txtBuscarProducto.Text.Trim.Length = 0 Then
+		Msgbox("Escriba el nombre del producto","Información")
+		Return
+	End If
+	
+	Dim json As String
+	json = "'f_idempresa':"&idEmpresa&",'f_parametro':'"&txtBuscarProducto.Text.Replace("'","").Replace("""","")&"'"
+	
+	Dim JobBuscarProducto As HttpJob
+	JobBuscarProducto.Initialize("JobBuscarProducto",Me)
+	JobBuscarProducto.PostString(url&"ws/get_productos_by_paramentros","json="&funciones.crearJson(tokenPublico,json))
+	hud.ProgressDialogShow("Buscando producto...")
+	Page1.ResignFocus
+	
+End Sub
+
+Sub btnProductoVolver_Click
+	PanelModalProducto.SetAlphaAnimated(300,0)
+End Sub
+
+Sub txtBuscarProducto_EnterPressed
+	
+	Page1.ResignFocus
+	
+End Sub
+
+
+
+Sub JobDone(Job As HttpJob)
+	
+
+	hud.ProgressDialogHide
+	
+	If Job.Success = False Then
+		Msgbox(jobMsj,jobMsjTitle)
+		Return
+	End If
+	
+	If funciones.verificarJob(Job.GetString)=False Then
+		Return
+	End If
+	
+	Dim map As Map
+	Dim list As List
+	Dim json2 As JSONParser
+	
+	
+	json2.Initialize(funciones.base64_Decode(Job.GetString))
+
+	map = json2.NextObject
+	
+	Select Job.JobName
+	
+      Case "JobBuscarProducto"
+				
+			ListaBusquedaPro.Clear
+			
+			list = map.Get("f_data")
+			If list.Size = 0 Then
+				Msgbox("No se ha encontrado productos con esta referencia","Información")
+				Return
+			End If
+					
+			For i=0 To list.Size -1
+				
+				map = list.Get(i)
+				Dim bm As Bitmap
+				
+				If map.Get("f_foto") <> Null And map.Get("f_foto") <> "" Then
+
+					bm = funciones.getImagen(map.Get("f_foto"))
+					
+				Else
+					bm.Initialize(File.DirAssets,"no-image.jpg")
+				End If
+				
+				ListaBusquedaPro.Add(CreateListItem(map.Get("f_descripcion"),"Precio: "&NumberFormat(map.Get("f_precio"),0,2),bm,ListaBusquedaPro.GetBase.Width,50dip),map)
+						
+			Next
+			
+	
+		Case "JobProductoMasVendido"
+			
+			list = map.Get("f_data")
+
+			Dim lef As Int = 0%x
+			Dim wi As Int =  0%x 'ViewCategoria.Width*(list.Size)
+			Dim mapa As Map
+			mapa.Initialize
+			
+			If list.Size < 1 Then
+				
+				If IsUsa Then
+					Msgbox("there isn't product in register","Warning!")
+					Else
+					Msgbox("No tienes productos registrados","Aviso!")
+				End If
+				
+				hud2.ProgressDialogHide
+			End If
+
+			Hscroll.Initialize("",47%x*list.Size,ViewCategoria.Height * 0.40)     
+			
+			For i = 0 To list.Size-1
+				mapa = list.Get(i)
+
+				Hscroll.Panel.AddView(createPanelProducto(mapa),lef, 0dip,ViewCategoria.Width * 0.47,ViewCategoria.Height * 0.40)
+				lef = lef + ViewCategoria.Width * 0.49
+				wi = wi + ViewCategoria.Width * 0.47
+				Hscroll.Width = wi
+
+			Next
+			
+			Hscroll.Color = Colors.RGB(222, 222, 222)
+			
+			cargarAllProductos
+			
+			Dim lblmasVendidos As Label
+			lblmasVendidos.Initialize("")
+			lblmasVendidos.Tag = "hola"
+			lblmasVendidos.Text = "Mas vendidos"
+			lblmasVendidos.TextColor = Colors.RGB(97, 97, 97)
+			lblmasVendidos.Font = Font.CreateNew(20)
+			
+			Dim lefLbl As Int = ViewCategoria.Width * 0.03
+			
+			ViewCategoria.Panel.AddView(lblmasVendidos,lefLbl,ViewCategoria.Height - ViewCategoria.Height,ViewCategoria.Width * 0.30,ViewCategoria.Height * 0.05)
+			
+			ViewCategoria.Panel.AddView(Hscroll,0%x,ViewCategoria.Height * 0.06,ViewCategoria.Width,ViewCategoria.Height * 0.41)
+			
+
+		Case "JobBuscarProductoALL"
+
+			list = map.Get("f_data")
+			If list.Size < 1 Then
+				
+				If IsUsa Then
+					Msgbox("we can't found any product for you","Warning!")
+					Else
+					Msgbox("No se ha encontrado productos","Información")
+				End If
+				
+				Return
+			End If
+			
+			Dim lblProductos As Label
+			lblProductos.Initialize("")
+			
+			lblProductos.Text = "Productos"
+			lblProductos.Font = Font.CreateNew(20)
+			lblProductos.TextColor = Colors.RGB(97, 97, 97)
+			
+			ViewCategoria.Panel.AddView(lblProductos,4dip,ViewCategoria.Height * 0.50,ViewCategoria.Width * 0.30,ViewCategoria.Height * 0.05)
+			
+			'AQUI COMIENZA LO BUENO
+
+			Dim lef As Int = 0%x
+			
+			If list.Size > 20 Then
+				
+				Dim alttop As Int  = ViewCategoria.Height * 0.56
+				Dim lef2 As Int = 0%x
+				Dim lef3 As Int = ViewCategoria.Width * 0.49
+								
+				For i=0 To 19
+					map = list.Get(i)
+					Dim bm As Bitmap
+					If map.Get("f_foto") <> Null And map.Get("f_foto") <> "" Then
+						bm = funciones.getImagen(map.Get("f_foto"))
+						
+					Else
+						bm.Initialize(File.DirAssets,"no-image.jpg")
+					End If
+					
+					If i Mod 2 == 0 Then
+
+						ViewCategoria.Panel.AddView(createPanelProductoScroll(map,bm),lef2,alttop,ViewCategoria.Width * 0.47,ViewCategoria.Height * 0.41)
+						
+						If i == list.Size-1 Then
+							alttop = alttop +  ViewCategoria.Height * 0.42
+						End If
+						
+					Else
+							
+						ViewCategoria.Panel.AddView(createPanelProductoScroll(map,bm),lef3,alttop,ViewCategoria.Width * 0.47,ViewCategoria.Height * 0.41)
+						alttop = alttop +  ViewCategoria.Height * 0.42
+						
+					End If
+					
+				Next
+				
+				ViewCategoria.ContentHeight = alttop
+				
+			Else
+				
+				Dim alttop As Int  = ViewCategoria.Height * 0.56
+				Dim lef2 As Int = 0%x
+				Dim lef3 As Int = ViewCategoria.Width * 0.49
+				
+				
+				For i=0 To list.Size-1
+					map = list.Get(i)
+					Dim bm As Bitmap
+					If map.Get("f_foto") <> Null And map.Get("f_foto") <> "" Then
+						bm = funciones.getImagen(map.Get("f_foto"))
+					Else
+						bm.Initialize(File.DirAssets,"no-image.jpg")
+					End If
+					
+					If i Mod 2 == 0 Then
+						
+
+						ViewCategoria.Panel.AddView(createPanelProductoScroll(map,bm),lef2,alttop,ViewCategoria.Width * 0.47,ViewCategoria.Height * 0.40)
+						
+					Else
+							
+						ViewCategoria.ContentHeight = ViewCategoria.Panel.Height 
+						
+						ViewCategoria.Panel.AddView(createPanelProductoScroll(map,bm),lef3,alttop,ViewCategoria.Width * 0.47,ViewCategoria.Height * 0.40)
+						
+						alttop = alttop +  ViewCategoria.Height * 0.42
+						
+					End If
+					
+				Next
+				
+			End If
+			
+			hud2.ProgressDialogHide
+			
+			
+		Case "JobDetalleTemporal" 
+			
+			map = map.Get("f_data")
+			If map.Get("f_paso") = "0" Then
+				Msgbox("Este producto no tiene existencia: "& CRLF & Job.Tag&"." ,"Información")
+				Return
+			End If
+			cantidadProduto = cantidadProduto + 1
+			lblCantidadProductos.Text = cantidadProduto
+			lblCantidadProductos.Visible = True
+			hud.ToastMessageShow("Producto agregado al carrito.",False)
+			
+		Case "JobEmpresaInfo"
+			
+			list = map.Get("f_data")
+			mapEmpresaInfo = list.Get(0)
+
+			IsUsa = mapEmpresaInfo.Get("f_adressusa")
+			
+		Case "buscarFavoritos"
+			
+			If listafavoritos.IsInitialized Then
+				listafavoritos.Clear
+			End If
+			
+			listafavoritos = map.Get("f_data")
+			'Msgbox(map.Get("f_data"),"")
+			buscarfavoritosvar = False
+			
+			
+			If CargarAgain Then
+				cargarDatos
+				CargarAgain = False
+			End If
+			
+			
+		Case "addFavoritos"
+			
+			If map.Get("f_data") Then
+				
+				listafavoritos.Add(mapaDetalleImagen)
+				
+				Sleep(100)
+				
+				hud.ToastMessageShow("Producto agregado a favoritos",False)
+
+				BuscarFavoritos
+			Else
+				hud.ToastMessageShow("Error al agregar su producto a favoritos",False)
+			End If
+			
+		Case "deleteFavoritos"
+			
+			If map.Get("f_data") Then
+				
+				For i=0 To listafavoritos.Size-1
+					
+					Dim map As Map = listafavoritos.Get(i)
+					
+					If map.Get("f_idrecord") == mapaDetalleImagen.Get("f_idproducto") Then
+						listafavoritos.RemoveAt(i)
+						i = listafavoritos.Size
+					End If
+				Next
+				
+				Sleep(100)
+		
+				hud.ToastMessageShow("Producto eliminado de favorito",False)
+				BuscarFavoritos
+			Else
+				hud.ToastMessageShow("Hubo un error a remover este producto de su lista de favritos",False)
+			End If
+			
+		Case "cantidadPro"
+			
+			cantidadProduto = map.Get("f_data")
+			
+			If cantidadProduto <> 0 Then
+				
+				lblCantidadProductos.Text = cantidadProduto
+				lblCantidadProductos.Visible = True
+				
+			End If
+	
+	End Select
+	
+End Sub
+
+Sub CreateListItem(Nombre As String, cantidad As String,img1 As Bitmap, Width As Int, Height As Int) As Panel
+	
+	Dim p As Panel
+	p.Initialize("")
+	p.SetLayoutAnimated( 0, 1, 0, 0, Width, Height) 'set the size before the layout is loaded
+	p.LoadLayout("frmPanelesItems")
+	lblNomCat.Text = Nombre
+	lblCantCat.Text = cantidad
+	imgCat.Bitmap = img1
+	Return p
+	
+End Sub
+
+'FUNCION 
+
+#Region funcionesPaneles
+
+Sub createPanelProducto(map As Map) As Panel
+	
+	Dim PanelFondoPro,PanelImagen As Panel
+	PanelFondoPro.Initialize("PanelFondoPro")
+	
+	PanelFondoPro.Width = ViewCategoria.Width * 0.47
+	PanelFondoPro.Height = ViewCategoria.Height * 0.40
+	
+	Dim heigImg As Int = PanelFondoPro.Height * 0.50  
+	Dim lef As Int = ViewCategoria.Width * 0.02
+	Dim lefFav As Int =  ViewCategoria.Width * 0.30
+	
+	
+	Dim Tnom As Int =   PanelFondoPro.Height * 0.39
+	Dim Hnom As Int =   PanelFondoPro.Height * 0.42
+	
+	Dim tPre As Int = PanelFondoPro.Height * 0.51
+	Dim hPre As Int  = PanelFondoPro.Height * 0.40
+	
+	Dim tImgFav As Int = PanelFondoPro.Height * 0.68
+	
+	
+	Dim mapaAux As Map
+	mapaAux.Initialize
+	
+	PanelFondoPro.SetShadow(Colors.Gray,0dip,2dip,0.3,True)
+	
+	PanelFondoPro.Color = Colors.RGB(255, 255, 255) 
+	
+	map.Put("f_destacado",True)
+	
+	PanelImagen.Initialize("")
+	
+	Dim imagenPro As ImageView
+	imagenPro.Initialize("")
+	
+	Dim bm As Bitmap
+	
+	If map.Get("f_foto") <> Null And map.Get("f_foto") <> "" Then
+		bm = funciones.getImagen(map.Get("f_foto"))
+		'bm = map.Get("f_foto")
+	Else
+		bm.Initialize(File.DirAssets,"no-image.jpg")
+	End If
+	
+	imagenPro.Bitmap = bm
+	
+	PanelImagen.SetShadow(Colors.Gray,0dip,2dip,0.3,True)
+	
+	PanelImagen.AddView(imagenPro,0%x,0dip,PanelFondoPro.Width,heigImg)
+	
+	PanelFondoPro.AddView(PanelImagen,0%x,0dip,PanelFondoPro.Width,heigImg)   
+	
+	
+	Dim lblTituloPro As Label
+	lblTituloPro.Initialize("")
+	lblTituloPro.Text = map.Get("f_descripcion")
+	lblTituloPro.TextColor = Colors.RGB(97, 97, 97)
+	lblTituloPro.Font = Font.CreateNew(15)
+	
+	PanelFondoPro.AddView(lblTituloPro,lef,Tnom,PanelFondoPro.Width - 4%x,Hnom)
+	
+	Dim lblPrecioPro As Label
+	lblPrecioPro.Initialize("")
+	lblPrecioPro.Text = NumberFormat(map.Get("f_precio"),0,2)   
+	lblPrecioPro.Text = "$ "&lblPrecioPro.Text
+	lblPrecioPro.TextColor = Colors.RGB(76, 175, 80)
+	lblPrecioPro.Font = Font.CreateNew(15)
+	
+	PanelFondoPro.AddView(lblPrecioPro,lef,tPre,PanelFondoPro.Width * 0.50,hPre)   
+	
+	Dim btnAddPro As Button
+	btnAddPro.InitializeCustom("btnAddProducto",Colors.RGB(244, 67, 54),Colors.RGB(0,0,0))
+	btnAddPro.Color = Colors.RGB(255, 255, 255)
+	btnAddPro.SetShadow(Colors.Gray,0dip,2dip,0.2,True)
+	btnAddPro.Tag = map
+	btnAddPro.Text = "Agregar"
+	
+	btnAddPro.SetShadow(Colors.Gray,0dip,2dip,0.3,True)
+	
+	PanelFondoPro.AddView(btnAddPro,PanelFondoPro.Width * 0.02,PanelFondoPro.Height * 0.80,PanelFondoPro.Width - 4%x,PanelFondoPro.Height *0.14)  'AQUI
+	
+	Dim imgFav As ImageView
+	imgFav.Initialize("imgFav")
+	Dim bmImgFav As Bitmap
+	
+	Dim mapaimg As Map
+	mapaimg.Initialize
+	
+	If isLoged Then
+		
+		For i=0 To listafavoritos.Size -1
+			Dim mapafav As Map
+			mapafav = listafavoritos.Get(i)
+		
+			If mapafav.Get("f_idrecord") == map.Get("f_idrecord") Then
+				bmImgFav.Initialize(File.DirAssets,"heartred.png") 'CORAZON ROJO
+				mapaimg.Put("f_red",True)
+				mapaimg.Put("f_idproducto", map.Get("f_idrecord"))
+				
+				'LO QUE HABIA BORRADO XD
+				map.Put("f_red",True)
+				map.Put("f_idproducto", map.Get("f_idrecord"))
+				
+				mapaAux.Put("f_red",True)
+				mapaAux.Put("f_idproducto", map.Get("f_idrecord"))
+
+				i = listafavoritos.Size -1
+			End If
+		Next
+		
+		
+	End If
+	
+	
+	If bmImgFav.IsInitialized == False Then
+		bmImgFav.Initialize(File.DirAssets,"heartwhiteandblack.png") ' CORAZON NEGRO
+		mapaimg.Put("f_red",False)
+		mapaimg.Put("f_idproducto", map.Get("f_idrecord"))
+
+		'LO QUE HABIA BORRADO XD
+		map.Put("f_red",False)
+		map.Put("f_idproducto", map.Get("f_idrecord"))
+		
+		mapaAux.Put("f_red",False)
+		mapaAux.Put("f_idproducto", map.Get("f_idrecord"))
+	End If
+	
+	PanelFondoPro.Tag = map
+	
+	imgFav.Bitmap = bmImgFav
+	
+	imgFav.Tag = mapaimg
+'kudsfd
+	PanelFondoPro.AddView(imgFav,lefFav,tImgFav,30dip,17dip)
+
+	
+	Return PanelFondoPro
+	
+End Sub
+
+
+
+Sub createPanelProductoScroll(mapaPanel1 As Map, imagen As Bitmap) As Panel
+
+	
+	Dim PanelFondoPro,PanelImagen As Panel
+	PanelFondoPro.Initialize("PanelFondoPro")
+	
+	PanelFondoPro.Width = ViewCategoria.Width * 0.47
+	PanelFondoPro.Height = ViewCategoria.Height * 0.40
+	
+	Dim heigImg As Int = PanelFondoPro.Height * 0.50
+	Dim lef As Int = ViewCategoria.Width * 0.02
+	Dim lefFav As Int =  ViewCategoria.Width * 0.30
+	
+	
+	Dim Tnom As Int =   PanelFondoPro.Height * 0.39
+	Dim Hnom As Int =   PanelFondoPro.Height * 0.42
+	
+	Dim tPre As Int = PanelFondoPro.Height * 0.51
+	Dim hPre As Int  = PanelFondoPro.Height * 0.40
+	
+	Dim tImgFav As Int = PanelFondoPro.Height * 0.68
+	
+	PanelFondoPro.SetShadow(Colors.Gray,0dip,2dip,0.3,True)
+	
+	PanelFondoPro.Color = Colors.RGB(255, 255, 255)
+	
+	PanelImagen.Initialize("")
+	
+	PanelImagen.SetShadow(Colors.Gray,0dip,2dip,0.3,True)
+	
+	Dim imagenPro As ImageView
+	imagenPro.Initialize("")
+	
+	imagenPro.Bitmap = imagen
+
+	mapaPanel1.Put("f_foto",imagen)
+	
+	mapaPanel1.Put("f_destacado",False)
+	
+	
+	PanelImagen.SetShadow(Colors.Gray,0dip,2dip,0.1,True)
+	
+	PanelImagen.AddView(imagenPro,0%x,0dip,PanelFondoPro.Width,heigImg)
+	
+	PanelFondoPro.AddView(PanelImagen,0%x,0dip,PanelFondoPro.Width,heigImg)
+	
+	Dim lblTituloPro As Label
+	lblTituloPro.Initialize("")
+	lblTituloPro.Text = mapaPanel1.Get("f_descripcion")
+	lblTituloPro.TextColor = Colors.RGB(97, 97, 97)
+	lblTituloPro.Font = Font.CreateNew(15)
+	
+	
+	PanelFondoPro.AddView(lblTituloPro,lef,Tnom,PanelFondoPro.Width - 4%x,Hnom)
+	
+	Dim lblPrecioPro As Label
+	lblPrecioPro.Initialize("")
+	lblPrecioPro.Text = NumberFormat(mapaPanel1.Get("f_precio"),0,2)
+	lblPrecioPro.Text = "$ "&lblPrecioPro.Text
+	lblPrecioPro.TextColor = Colors.RGB(76, 175, 80)
+	lblPrecioPro.Font = Font.CreateNew(15)
+	
+	PanelFondoPro.AddView(lblPrecioPro,lef,tPre,PanelFondoPro.Width * 0.50,hPre)
+	
+	Dim btnAddPro As Button
+	btnAddPro.InitializeCustom("btnAddProducto",Colors.RGB(244, 67, 54),Colors.RGB(0,0,0))
+	btnAddPro.Color = Colors.RGB(255, 255, 255)
+	btnAddPro.SetShadow(Colors.Gray,0dip,2dip,0.2,True)
+	btnAddPro.Tag = mapaPanel1
+	btnAddPro.Text = "Agregar"
+	
+	btnAddPro.SetShadow(Colors.Gray,0dip,2dip,0.3,True)
+	
+	PanelFondoPro.AddView(btnAddPro,PanelFondoPro.Width * 0.02,PanelFondoPro.Height * 0.80,PanelFondoPro.Width - 4%x,PanelFondoPro.Height *0.14)
+	
+	
+	Dim imgFav As ImageView
+	imgFav.Initialize("imgFav")
+	Dim bmImgFav As Bitmap
+	
+	Dim mapaimg As Map
+	mapaimg.Initialize
+	
+	If isLoged Then
+		
+		For i=0 To listafavoritos.Size -1
+			Dim mapafav As Map
+			mapafav = listafavoritos.Get(i)
+		
+			If mapafav.Get("f_idrecord") == mapaPanel1.Get("f_idrecord") Then
+				bmImgFav.Initialize(File.DirAssets,"heartRed.png")
+				i = listafavoritos.Size -1
+				mapaimg.Put("f_red",True)
+				mapaimg.Put("f_idproducto", mapaPanel1.Get("f_idrecord"))
+				
+				'LO QUE HABIA BORRADO XD
+				mapaPanel1.Put("f_red",True)
+				mapaPanel1.Put("f_idproducto", mapaPanel1.Get("f_idrecord"))
+				
+			End If
+		Next
+		
+	End If
+	
+	If bmImgFav.IsInitialized == False Then
+		bmImgFav.Initialize(File.DirAssets,"heartWhiteandBlack.png")
+		mapaimg.Put("f_red",False)
+		mapaimg.Put("f_idproducto", mapaPanel1.Get("f_idrecord"))
+		
+		'LO QUE HABIA BORRADO XD
+		mapaPanel1.Put("f_red",False)
+		mapaPanel1.Put("f_idproducto", mapaPanel1.Get("f_idrecord"))
+
+		
+	End If
+'	Msgbox(mapaPanel1,"")
+	PanelFondoPro.Tag = mapaPanel1
+	
+	imgFav.Bitmap = bmImgFav
+	imgFav.Tag = mapaimg
+	
+	PanelFondoPro.AddView(imgFav,lefFav,tImgFav,30dip,17dip)
+	
+	Return PanelFondoPro
+	
+End Sub
+ 
+ 
+ #End Region
+
+#Region Paneles
+
+Sub btnAddProducto_Click
+	Dim b As Button
+	b.Initialize("b",b.STYLE_CONTACT_ADD)
+	b = Sender
+	
+	Dim mapa As Map  = b.Tag
+	
+	If mapa.Get("f_precio") <= 0 Then
+		
+		Msgbox("Este producto tiene un precio el cual no es acorde, comuniquese con los titulares de este","Aviso")
+		
+	Else
+		'mapaDetalle.Initialize
+		salvar_detalle_temporal(mapa,1)
+	End If
+	
+End Sub
+
+Sub PanelFondoPro_Click
+	
+	Dim mapa As Map
+	mapa.Initialize
+	
+	Dim b As Panel
+	b = Sender
+	
+	mapa = b.Tag
+	mapaDetalle = mapa
+	
+	If PanelFondoDetalles.IsInitialized == False Then
+		pageDetalle.Initialize("pageDetalle")
+
+		pageDetalle.RootPanel.LoadLayout("frmDetalleProducto")
+	End If
+	
+	NavControl.ShowPage2(pageDetalle,True) 
+	
+	Dim bm As Bitmap
+		
+	If mapa.Get("f_destacado") Then
+	
+	If  mapa.Get("f_foto") <> Null And mapa.Get("f_foto") <> "" Then
+		bm = funciones.getImagen(mapa.Get("f_foto"))
+
+		ImageViewDetalles.Bitmap= bm
+		'ImageViewDetalles.Background =  mapa.Get("f_foto")
+			
+	Else
+		bm.Initialize(File.DirAssets,"no-image.jpg")
+
+			ImageViewDetalles.Bitmap = bm
+		End If
+	
+	Else
+		If  mapa.Get("f_foto") <> Null And mapa.Get("f_foto") <> "" Then
+'			bm = funcion.getImagen(mapa.Get("f_foto"))
+
+			ImageViewDetalles.Bitmap = funciones.getImagen(mapa.Get("f_foto"))
+			
+		Else
+			bm.Initialize(File.DirAssets,"no-image.jpg")
+			
+			ImageViewDetalles.Bitmap = bm
+		End If
+	
+	End If
+	
+	'PARA PONER LO DE FAV
+	
+	Dim bmimgfav As Bitmap
+	
+	If isLoged Then
+		
+		For i=0 To listafavoritos.Size-1
+		
+			Dim mimap As Map = listafavoritos.Get(i)
+		
+			If mapa.Get("f_idrecord") == mimap.Get("f_idrecord") Then
+				bmimgfav.Initialize(File.DirAssets,"heartRed.png")
+				i = listafavoritos.Size
+				imgdetallefav.Tag = True
+			End If
+		
+		Next
+		
+	End If
+
+	If bmimgfav.IsInitialized == False Then
+		bmimgfav.Initialize(File.DirAssets,"heartWhiteandBlack.png")
+		imgdetallefav.Tag = False
+	End If
+
+	imgdetallefav.Bitmap = bmimgfav 
+	
+	
+	'SOMBRAS
+	btnagregarCarritoDetalle.SetShadow(Colors.Gray,0dip,2dip,0.3,True)
+	PanelImagenDetalles.SetShadow(Colors.Gray,0dip,3dip,0.3,True)
+	PanellblCantidad.SetShadow(Colors.Gray,0dip,1dip,0.3,True)
+	PanelEncabezadoDetalles.SetShadow(Colors.Gray,0dip,3dip,0.3,True)
+	
+	lblPrecioEncabezado.Text = "$"&NumberFormat( mapa.Get("f_precio"),0,2)
+	lblNombeEncabezado.Text = mapa.Get("f_descripcion")
+	lblcantidad.Text = 1
+	StepperCantidad.Value = lblcantidad.Text
+	lblPrecio.Text = "$"&NumberFormat( mapa.Get("f_precio"),0,2)
+	
+	'ismodal = False CONFIGURACIONES
+	
+End Sub
+
+Sub imgFav_Click
+	
+	If isLoged Then
+		
+		Dim img As ImageView
+		img.Initialize("")
+		img = Sender
+	
+		Dim mapa As Map
+		mapa.Initialize
+		mapa = img.Tag
+		
+		mapaDetalleImagen = mapa 
+		
+		Dim bm As  Bitmap
+	
+		If mapa.Get("f_red") Then
+		
+			bm.Initialize(File.DirAssets,"heartWhiteandBlack.png")
+			img.Bitmap = bm
+			mapa.Put("f_red",False)
+		
+			Dim json As String = "'f_idusuario':"&usersData.idUsuario& _
+		",'f_idproducto':"&mapa.Get("f_idproducto") 
+		
+			Dim deleteFavoritos As HttpJob
+			deleteFavoritos.Initialize("deleteFavoritos",Me)
+			CargarAgain = False
+			deleteFavoritos.PostString(url&"puntoventa/deletefav","json="&funciones.crearJson(token,json))
+			
+		Else
+			
+			bm.Initialize(File.DirAssets,"heartRed.png")
+			img.Bitmap = bm
+			mapa.Put("f_red",True)
+		
+			Dim json As String = "'f_idusuario':"&usersData.idUsuario& _
+		",'f_idproducto':"&mapa.Get("f_idproducto") 
+		
+			Dim putFavoritos As HttpJob
+			putFavoritos.Initialize("addFavoritos",Me)
+			CargarAgain = False
+			putFavoritos.PostString(url&"puntoventa/addfav","json="&funciones.crearJson(token,json))
+		
+		End If
+		
+	Else
+			
+		Msgbox2("Msg1","Para agregar un producto a favoritos primero debe iniciar Sesión","Advertencia",Array("Si","No"))
+		
+	End If
+	
+End Sub
+
+Sub Msg1_Click(ButtonText As String)
+
+	If ButtonText = "Si" Then
+		
+		If smc.Tag <> "inicio" Then
+			NavControl.RemoveCurrentPage
+			'Page1.RootPanel.Visible = False
+		End If
+		
+		smc.CloseMenu
+		Login.Initialize
+		
+	Else If ButtonText = "No" Then
+		Return
+	End If
+
+End Sub
+
+#End Region
+
+
+#Region DetallesEventos
+
+Sub btnagregarCarritoDetalle_Click
+	salvar_detalle_temporal(mapaDetalle,lblcantidad.Text)
+	btnBackDetalles_Click
+End Sub
+
+Sub btnBackDetalles_Click
+	
+	NavControl.ShowPage2(Page1,True)
+	
+End Sub
+
+Sub StepperCantidad_ValueChanged (Value As Double)
+	lblcantidad.Text = Value
+End Sub
+
+Sub imgdetallefav_Click
+	
+	Dim i As ImageView
+	i.Initialize("")
+	i = Sender
+	
+	If isLoged Then
+		
+		If i.Tag == 1 Then
+			
+			Msgbox2("MsgDeleteFav","Desea eliminar este producto de su lista de favoritos?","Advertencia!!",Array("Si","No"))
+			
+			Else
+			Msgbox2("MsgAddFav","Desea agregar este producto de su lista de favoritos?","Advertencia!!",Array("Si","No"))
+		End If
+		
+		Else
+		Msgbox2("Msg1","Para agregar un producto a favoritos primero debe iniciar Sesión","Advertencia",Array("Si","No"))
+	End If
+	
+End Sub
+
+Sub MsgDeleteFav_Click(ButtonText As String)
+
+	If ButtonText = "Si" Then
+		
+		Dim json As String = "'f_idusuario':"&usersData.idUsuario& _
+		    ",'f_idproducto':"&mapaDetalle.Get("f_idrecord") 
+		
+		Dim deleteFavoritos As HttpJob
+		deleteFavoritos.Initialize("deleteFavoritos",Me)
+		deleteFavoritos.PostString(url&"puntoventa/deletefav","json="&funciones.crearJson(token,json))
+		
+		Dim bm As Bitmap
+		bm.Initialize(File.DirAssets,"heartwhiteandblack.png")
+		CargarAgain = True
+		BuscarFavoritos
+		imgdetallefav.Bitmap = bm
+		
+	Else If ButtonText = "No" Then
+		Return
+	End If
+
+End Sub
+
+Sub MsgAddFav_Click(ButtonText As String) 
+
+	If ButtonText = "Si" Then
+		
+		Dim json As String = "'f_idusuario':"&usersData.idUsuario& _
+		",'f_idproducto':"&mapaDetalle.Get("f_idrecord") 
+		
+		Dim putFavoritos As HttpJob
+		putFavoritos.Initialize("addFavoritos",Me)
+		putFavoritos.PostString(url&"puntoventa/addfav","json="&funciones.crearJson(token,json))
+		
+		Dim bm As Bitmap
+		bm.Initialize(File.DirAssets,"heartred.png")
+		CargarAgain = True
+		BuscarFavoritos
+		imgdetallefav.Bitmap = bm
+		
+	Else If ButtonText = "No" Then
+		Return
+	End If
+
+End Sub
+
+#End Region
+
+
+Sub salvar_detalle_temporal(map As Map, cantidad As Int )
+	
+	Dim mapCalculos As Map = funciones.recalcular(map.Get("f_precio"),0, cantidad ,map.Get("f_tax"), impuestoIncluido,  False)
+	
+	Dim json As String
+	json = "'f_regresa':false"& _
+			",'f_idempresa':"&idEmpresa& _
+	  		",'f_tipo':1"& _
+			",'f_idproducto':"&map.Get("f_idrecord")& _
+			",'f_cantidad':"&cantidad&""& _
+			",'f_tax':"&mapCalculos.Get("f_tax")& _ 
+			",'f_precio':"&mapCalculos.Get("f_precio_para_mostrar")& _
+			",'f_importe':"&mapCalculos.Get("f_total")& _
+			",'f_descuento':0"& _
+			",'f_diferencia':0"& _
+			",'f_porciento_descuento':0"& _
+			",'f_porciento_tax':"&map.Get("f_tax")& _
+			",'f_imei':"&imei
+	
+	Dim JobDetalleTemporal As HttpJob
+	JobDetalleTemporal.Initialize("JobDetalleTemporal",Me)
+	JobDetalleTemporal.PostString(url&"puntoventa/salvar_detalle_temporal2","json="&funciones.crearJson(tokenPublico,json))
+	
+End Sub
+
+Sub ListProductosModalView_SelectedChanged (SectionIndex As Int, Cell As TableCell)
+	
+	Msgbox("HOLA","MUNDO")
+End Sub
+	
+
+Sub Panel1_Click
+	
+	If smc.Tag == "inicio" Then
+		smc.CloseMenu
+		Else
+			
+		If smc.Tag == "login" Then
+			Initialize
+			Else
+			NavControl.RemoveCurrentPage
+			smc.CloseMenu
+		End If
+
+	End If
+	
+End Sub
+
+Sub Panel7_Click
+	
+	If isLoged Then
+		Msgbox2("MsgCerrarSesion","Desea cerrar sesion?","Advertencia",Array("Si","No"))
+	Else
+		smc.CloseMenu
+		btnIniciarSecion_Click
+	End If
+	
+End Sub
+
+Sub MsgCerrarSesion_Click(ButtonText As String)
+
+	If ButtonText = "Si" Then
+		smc.CloseMenu
+		isLoged = False
+		reload = True
+		
+		lblNombreUser.Text = "Público"
+		lblEmailUser.Text = ""
+		Login.Initialize
+		Panel7.Visible = False
+		
+	Else If ButtonText = "No" Then
+		Return
+	End If
+
+End Sub
+
+Sub Panel6_Click
+	
+	If smc.Tag == "about" Then
+		smc.CloseMenu
+	Else
+		pageAboutUs.Initialize("pageAboutUs")
+		pageAboutUs.RootPanel.LoadLayout("frmAboutsUs")
+		
+		If smc.Tag <> "inicio" Then
+			NavControl.RemoveCurrentPage
+			'Page1.RootPanel.Visible = False
+		End If
+
+		smc.Tag = "about"
+	
+		smc.CloseMenu
+		NavControl.ShowPage2(pageAboutUs,True)
+	End If
+	
+End Sub
+
+Sub Panel4_Click
+	
+	If isLoged Then
+		
+		If smc.Tag == "direcciones" Then
+			 smc.CloseMenu
+			 Else
+			 	
+				If smc.Tag <> "inicio" Then
+					NavControl.RemoveCurrentPage
+				End If
+			smc.CloseMenu
+			Direcciones.Initialize
+		End If
+	Else
+		Msgbox2("Msg1","Antes de ver sus direcciones tiene que iniciar sesion","Advertencia",Array("Si","No"))
+	End If
+
+End Sub
+
+Sub Panel3_Click
+	
+	If isLoged Then
+		
+		If smc.Tag == "favoritos" Then
+			smc.CloseMenu
+			Else
+				
+			If smc.Tag <> "inicio" Then
+				NavControl.RemoveCurrentPage
+			End If
+				smc.CloseMenu
+				Favoritos.Initilize
+		End If
+	Else
+		Msgbox2("Msg1","Para agregar un producto a favoritos primero debe iniciar Sesión","Advertencia",Array("Si","No"))
+	End If
+
+End Sub
+
+Sub Panel2_Click
+	
+	If smc.Tag == "categoria" Then
+		smc.CloseMenu
+		Else
+			
+		If smc.Tag <> "inicio" Then
+			NavControl.RemoveCurrentPage
+		End If
+		smc.CloseMenu
+		Categoria.Initialize
+		
+	End If
+	
+End Sub
+
+Sub Panel5_Click
+	
+	If isLoged Then
+		
+		If smc.Tag == "reporte" Then
+			smc.CloseMenu
+			Else
+				
+			If smc.Tag <> "inicio" Then
+				NavControl.RemoveCurrentPage
+			End If
+			smc.CloseMenu
+			Reportes.Initialize
+		End If
+		
+	Else
+		Msgbox2("Msg1","Antes de ver sus ordenes tiene que iniciar sesion","Advertencia",Array("Si","No"))
+	End If
+	
+	
+End Sub
+
+Sub actualizar
+	If isLoged Then
+		BuscarFavoritos
+		cargarDatos
+	End If
+End Sub
+
+Sub actualizarCantidad
+	
+	lblCantidadProductos.Text = cantidadProduto
+	
+	If cantidadProduto > 0 Then
+		lblCantidadProductos.Visible = True
+		Else
+		lblCantidadProductos.Visible = False
+	End If
+	
+	 
+End Sub
+
+
+Sub btnBackAboutus_Click
+	NavControl.ShowPage(Page1)
+	smc.Tag = "inicio"
+End Sub
+
+Sub PanelUser_Click
+	
+	If isLoged Then
+		smc.CloseMenu
+		Perfil.Initialize
+		Else
+		Msgbox2("Msg1","Para editar su perfil tiene que iniciar sesion","Advertencia",Array("Si","No"))
+	End If
+	
+End Sub
+
+Sub btnMasVendido_Click
+	
+	If isLoged Then
+		smc.CloseMenu
+		Favoritos.Initilize
+		actualizar
+	Else
+		Msgbox2("Msg1","Para agregar un producto a favoritos primero debe iniciar Sesión","Advertencia",Array("Si","No"))
+	End If
+	
+End Sub
+
+
+Sub ListaBusquedaPro_ItemClick (Index As Int, Value As Object)
+	
+	Dim mapa As Map = Value
+	mapaDetalle = mapa
+	
+	If PanelFondoDetalles.IsInitialized == False Then
+		pageDetalle.Initialize("pageDetalle")
+
+		pageDetalle.RootPanel.LoadLayout("frmDetalleProducto")
+	End If
+	
+	NavControl.ShowPage2(pageDetalle,True)
+	
+	Dim bm As Bitmap
+	
+	If  mapa.Get("f_foto") <> Null And mapa.Get("f_foto") <> "" Then
+		ImageViewDetalles.Bitmap = funciones.getImagen(mapa.Get("f_foto"))
+			
+	Else
+		bm.Initialize(File.DirAssets,"no-image.jpg")
+		ImageViewDetalles.Bitmap = bm
+	End If
+	
+	
+	Dim bmimgfav As Bitmap
+	
+	If isLoged Then
+		
+		For i=0 To listafavoritos.Size-1
+		
+			Dim mimap As Map = listafavoritos.Get(i)
+		
+			If mapa.Get("f_idrecord") == mimap.Get("f_idrecord") Then
+				bmimgfav.Initialize(File.DirAssets,"heartRed.png")
+				i = listafavoritos.Size
+				imgdetallefav.Tag = True
+			End If
+		
+		Next
+		
+	End If
+
+	If bmimgfav.IsInitialized == False Then
+		bmimgfav.Initialize(File.DirAssets,"heartWhiteandBlack.png")
+		imgdetallefav.Tag = False
+	End If
+
+	imgdetallefav.Bitmap = bmimgfav
+	
+	'SOMBRAS
+	btnagregarCarritoDetalle.SetShadow(Colors.Gray,0dip,2dip,0.3,True)
+	PanelImagenDetalles.SetShadow(Colors.Gray,0dip,3dip,0.3,True)
+	PanellblCantidad.SetShadow(Colors.Gray,0dip,1dip,0.3,True)
+	PanelEncabezadoDetalles.SetShadow(Colors.Gray,0dip,3dip,0.3,True)
+	
+	lblPrecioEncabezado.Text = "$"&NumberFormat( mapa.Get("f_precio"),0,2)
+	lblNombeEncabezado.Text = mapa.Get("f_descripcion")
+	lblcantidad.Text = 1
+	StepperCantidad.Value = lblcantidad.Text
+	lblPrecio.Text = "$"&NumberFormat( mapa.Get("f_precio"),0,2)
+	
+	
+End Sub
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

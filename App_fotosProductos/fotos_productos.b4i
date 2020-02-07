@@ -1,0 +1,560 @@
+﻿Build1=Default,com.jq.menube.fotos
+File1=frmImagen.bil
+File2=frmListaProductos.bil
+File3=frmprueba.bil
+File4=ItemList.bil
+FileGroup1=Default Group
+FileGroup2=Default Group
+FileGroup3=Default Group
+FileGroup4=Default Group
+Group=Default Group
+Library1=icore
+Library10=iphone
+Library11=imedia
+Library2=ixui
+Library3=ihttp
+Library4=ihttputils2
+Library5=ihud
+Library6=ijson
+Library7=idateutils
+Library8=iencryption
+Library9=irandomaccessfile
+Module1=CustomListView
+NumberOfFiles=4
+NumberOfLibraries=11
+NumberOfModules=1
+Version=6
+@EndOfDesignText@
+'Code module
+#Region  Project Attributes 
+	#ApplicationLabel: Fotos_Productos
+	#Version: 1.0.1 
+	'Orientation possible values: Portrait, LandscapeLeft, LandscapeRight and PortraitUpsideDown
+	#iPhoneOrientations: Portrait
+	#iPadOrientations: Portrait
+	#Target: iPhone
+	#ATSEnabled: True
+	#MinVersion: 7
+	
+'	#CertificateFile: ios_development.cer
+'	#ProvisionFile: randydeveloper.mobileprovision
+'	
+	#CertificateFile: ios_distribution.cer
+	#ProvisionFile: produccionmenubefotos.mobileprovision
+	
+	#PlistExtra:<key>NSPhotoLibraryUsageDescription</key><string>Select a photo.</string>
+	#PlistExtra:<key>NSPhotoLibraryAddUsageDescription</key><string>Save photo in albums.</string>
+	#PlistExtra:<key>NSCameraUsageDescription</key><string>Taking a photo.</string>
+	#PlistExtra:<key>NSMicrophoneUsageDescription</key><string>Record video.</string>
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'Public variables can be accessed from all modules.
+	
+	Dim xui As XUI
+	Dim url As String = "https://www.fernandezsupermarket.com/api/ios/producto_fotos"
+'	Dim url As String = "http://10.10.10.35:8040/producto_fotos"
+'	Dim url As String = "http://162.211.121.18:8040/producto_fotos"
+'	Dim url as String = "10.10.10.35:8040/producto_fotos"
+	Dim idempresa As Int = 1000
+'	Dim idempresa as Int = 1053
+	Dim jobMsj As String = "No se pudo conectar con el servidor. Compruebe su conexión a internet."
+	Dim jobMsjTitle As String = "Problemas de conexión"
+	Private cam As Camera
+	Dim MapaProducto As Map
+	Dim listaCategoria As List
+	Dim idCategoria = 0
+	Dim enviado As Boolean = False
+	
+	'PROGRES DIALOG
+	Dim hudListacargar As HUD
+	Dim hudEnviar As HUD
+	
+	Public App As Application
+	Public NavControl As NavigationController
+	Private Page1 As Page
+
+	Private btnTipoCategoria As Button
+	Private lista As CustomListView
+	Private PanelFondo As Panel
+	Private txtNombreRef As TextField
+	Private btnTomarFoto As Button
+	Private lblNombre As Label
+	Private lblreferencia As Label
+	Private Panel1 As Panel
+	
+	'IMAGENES
+	Private btnCancelarFoto As Button
+	Private btnEnviar As Button
+	Private imgMyfoto As ImageView
+	Private lbltituloImagen As Label
+	Private PanelFondoImagen As Panel
+	Private btnBuscar As Button
+End Sub
+
+Private Sub Application_Start (Nav As NavigationController)
+	'SetDebugAutoFlushLogs(True) 'Uncomment if program crashes before all logs are printed.
+	NavControl = Nav
+	Page1.Initialize("Page1")
+	Page1.RootPanel.LoadLayout("frmListaProductos")
+	Page1.RootPanel.Color = Colors.White
+	NavControl.ShowPage(Page1)
+	NavControl.NavigationBarVisible = False
+	MapaProducto.Initialize
+		
+	'PRIMERA BUSQUEDA	
+	CallListaPrincipal
+	
+	
+	Dim mapa As Map
+	mapa.Initialize
+			
+	'BUSQUEDA DE CATEGORIAS
+	
+	Dim jobcate As HttpJob
+	jobcate.Initialize("categoria",Me)
+	
+	mapa.Put("f_idempresa",idempresa)
+	
+	jobcate.PostString(url&"/fotos/categoria","dato="&convertir(mapa))
+	
+End Sub
+
+Sub CallListaPrincipal
+	
+	Dim mapa As Map
+	mapa.Initialize
+		
+	mapa.Put("f_idempresa",idempresa)
+	mapa.Put("f_buscando",False)
+	mapa.Put("f_nombre","")
+	mapa.Put("f_categoria",0)
+		
+	Dim job As HttpJob
+	job.Initialize("lista",Me)
+	
+	hudListacargar.ProgressDialogShow("Cargando Lista!")
+		
+	job.PostString(url&"/fotos/lista","dato="&convertir(mapa))
+	
+	
+End Sub
+
+Private Sub Page1_Resize(Width As Int, Height As Int)
+	
+End Sub
+
+Private Sub Application_Background
+	
+End Sub
+
+
+Sub btnTipoCategoria_Click
+		
+		Dim sheet As ActionSheet
+		
+		Dim li As List
+		li.Initialize
+		
+		For i=0 To listaCategoria.Size-1
+			
+			Dim mapa As Map = listaCategoria.Get(i)
+		li.Add(mapa.Get("f_descripcion"))
+			
+		Next
+		
+		sheet.Initialize("sheet", "Categorias", "Cancel" , "", li)
+		sheet.Show(Page1.RootPanel)
+		Wait For sheet_Click (tipo As String)
+	
+	If tipo <> "Cancel" Then
+		
+			For i = 0 To listaCategoria.Size-1
+				
+			Dim mapa As Map = listaCategoria.Get(i)
+			
+			If mapa.Get("f_descripcion") == tipo Then
+				idCategoria = mapa.Get("f_idrecord")
+				btnTipoCategoria.Text = tipo
+			End If
+				
+			Next
+	
+		Else
+			sheet.Dismiss
+		
+	End If
+	
+End Sub
+
+Sub CreateLista(listapro As List)
+	
+	lista.Clear
+	For i=0 To listapro.Size-1
+		
+		Dim mapa As Map = listapro.Get(i)
+		
+		lista.Add(CreateItem(mapa.Get("f_nombre"),mapa.Get("f_referencia")),mapa)
+	Next
+	
+End Sub
+
+Private Sub CreateItem(Nombre As String, Referencia As String) As B4XView
+	
+	Dim p As B4XView = xui.CreatePanel("")
+	p.SetLayoutAnimated(100, 0,0,100%x,65dip)
+	p.LoadLayout("ItemList")
+	
+	
+	lblNombre.Top = 15dip
+	lblNombre.Left = 15dip
+	lblNombre.Width = 250dip
+	lblNombre.Height = 14dip
+	
+	lblNombre.Text = Nombre
+	
+	lblreferencia.Top = lblNombre.Top + 25dip
+	lblreferencia.Left = 15dip
+	lblreferencia.Width = 250dip
+	lblreferencia.Height = 14dip
+		
+	lblreferencia.Text = Referencia
+	
+	p.Color = Colors.RGB(255,255,255)
+	
+	Return p
+		
+End Sub
+
+Sub lista_ItemClick (Index As Int, Value As Object)
+	
+	MapaProducto  = Value
+	
+	Msgbox2("Msg1","Desea tomarle una foto al producto "&MapaProducto.Get("f_nombre")&"?","Pregunta",Array("Si","No"))
+	
+End Sub
+
+Sub Msg1_Click(ButtonText As String)
+
+	If ButtonText = "Si" Then
+		
+		Dim sheet As ActionSheet
+		sheet.Initialize("sheet", "My photo", "Cancel" , "", Array("Take Photo", "Choose Photo"))
+		sheet.Show(Page1.RootPanel)
+		Wait For sheet_Click (tipo As String)
+	
+		If tipo <> "Cancel" Then
+	
+			If tipo == "Take Photo" Then
+				InitCamera
+				cam.TakePicture
+			End If
+	
+			If tipo == "Choose Photo" Then
+				InitCamera
+				cam.SelectFromSavedPhotos(Sender, cam.TYPE_ALL)
+			End If
+		
+		End If
+		
+		
+	Else If ButtonText = "No" Then
+		Return
+	End If
+
+End Sub
+
+
+Sub JobDone(Job As HttpJob)
+	
+	If Job.Success = False Then
+		Msgbox(jobMsj,jobMsjTitle)
+		Return
+	End If
+	
+	Dim map As Map
+	Dim list As List
+	Dim json2 As JSONParser
+	
+	
+	json2.Initialize(base64_Decode(Job.GetString))
+
+	map = json2.NextObject
+	
+	Select Job.JobName
+		
+		Case "lista"
+			
+			hudListacargar.ProgressDialogHide
+			
+			list = map.Get("f_data")
+			CreateLista(list)
+			
+		Case "categoria"
+			
+			listaCategoria = map.Get("f_data")
+			
+		Case "busqueda"
+			
+			hudListacargar.ProgressDialogHide
+			
+			list = map.Get("f_data")
+			idCategoria = 0
+			CreateLista(list)
+			
+		Case "actualizar"
+			
+			hudEnviar.ProgressDialogHide
+			File.Delete(File.DirTemp,"f_foto.png")
+			
+			Dim ma As Map
+			ma = map.Get("f_data")
+			
+			If ma.Get("f_bandera") Then
+				Msgbox(ma.Get("f_mensaje"),"Exito!!")
+				
+				enviado = True
+				btnCancelarFoto_Click
+				CallListaPrincipal
+				
+				Else
+				Msgbox(ma.Get("f_mensaje"),"Ups ha ocurrido un error!!")
+			End If
+			
+		
+	End Select
+	
+End Sub
+
+Sub btnBuscar_Click
+	
+	If txtNombreRef.Text == "" And idCategoria <= 0 Then
+		Msgbox("Antes de buscar un producto debe de poner su referencia, o seleccionar una categoria","Aviso!")
+		txtNombreRef.RequestFocus
+		Return
+		
+		Else
+			
+			Dim mapa As Map
+			mapa.Initialize
+			
+		    mapa.Put("f_idempresa",idempresa)
+		    mapa.Put("f_buscando",True)
+		    mapa.Put("f_nombre",txtNombreRef.Text)
+		    mapa.Put("f_categoria",idCategoria)
+			
+			Dim job As HttpJob
+			job.Initialize("busqueda",Me)
+			
+			hudListacargar.ProgressDialogShow("Buscando...")
+		    job.PostString(url&"/fotos/lista","dato="&convertir(mapa))
+			
+		
+	End If
+	
+End Sub
+
+
+
+
+'ENVIO DE DATOS
+
+Sub convertir(data As Object) As String
+
+	Dim encode As StringUtils
+	Dim map As Map
+	map.Initialize
+	map.Put("f_key",getToken)
+	map.Put("f_data",data)
+	Dim json As JSONGenerator
+	json.Initialize(map)
+	Return encode.EncodeBase64(json.ToString.GetBytes("UTF8"))
+
+End Sub
+
+Sub GetMD5 (Text As String) As String
+	Dim MD As MessageDigest
+	Dim Data() As Byte =  MD.GetMessageDigest(Text.GetBytes("UTF8"),"MD5")
+	Dim BC As ByteConverter
+	Return BC.HexFromBytes(Data)
+End Sub
+
+Sub getToken() As String
+	
+	DateTime.DateFormat = "MM/dd/yyyy"
+	
+	Dim code As String = "solomujeresamericanas@"&DateTime.Date(DateTime.Now)
+'	Dim code As String = "admin"
+	
+	Return GetMD5(code)
+	
+End Sub
+
+Sub base64_Decode(text As String) As String
+
+	If text = Null Or text.Length = 0 Or text = "" Then
+		Return ""
+	End If
+	
+	Dim su As StringUtils
+	Dim b() As Byte = su.DecodeBase64(text)
+	
+	Dim res As String = BytesToString(b , 0, b.Length, "UTF8")
+'	res = res.Replace(":NONE}",":'NONE'}").Replace("'","""")
+	Return res
+	
+End Sub
+
+#Region FOTOTOMADA
+
+Sub InitCamera
+	cam.Initialize("cam", Page1)
+End Sub
+
+
+Sub Cam_Complete (Success As Boolean, Image As Bitmap, VideoPath As String)
+'	Dim p As Phone
+	If Success Then
+		If PanelFondoImagen.IsInitialized == False Then
+			Page1.RootPanel.LoadLayout("frmImagen")
+		End If
+		
+		PanelFondoImagen.Visible = True
+		imgMyfoto.Bitmap = Image
+		lbltituloImagen.Text = MapaProducto.Get("f_nombre")&" / "&MapaProducto.Get("f_referencia")
+
+'		p.AddImageToAlbum(Image) 'PARA QUE NO GUARDE EN EL TELEFONO
+	End If
+End Sub
+
+'Sub btnEnviar_Click
+'	
+'	Dim mapa As Map
+'	mapa.Initialize	
+'
+'	mapa.Put("f_idempresa",idempresa)
+'	mapa.Put("f_idproducto",MapaProducto.Get("f_idrecord"))
+'	mapa.Put("f_foto",getByteImagen(imgMyfoto.Bitmap))
+'		
+'	Dim job As HttpJob
+'	job.Initialize("actualizar",Me)
+'	
+'	hudEnviar.ProgressDialogShow("Enviando...")
+'
+'	job.PostString(url&"/fotos/actualizar","dato="&convertir(mapa))
+'	
+'End Sub
+
+Sub btnEnviar_Click
+	
+	Dim mapa,mapDato As Map
+	mapa.Initialize
+	mapDato.Initialize
+	
+	Dim list As List
+'	Msgbox(BitmapToByte(imgMyfoto.Bitmap),"")
+'	Return
+'	File.WriteBytes(File.DirTemp,"foto.png",getByteImagen(imgMyfoto.Bitmap))
+'	Log(File.Size(File.DirTemp,"foto.png"))
+'	File.Delete(File.DirTemp,"foto.png")
+
+	File.WriteBytes(File.DirTemp,"f_foto.png",getByteImagen(imgMyfoto.Bitmap.Resize(500,500,True)))
+
+	Dim multipart As MultipartFileData
+	multipart.Initialize
+	multipart.ContentType= "application/octet-stream"
+	multipart.Dir = File.DirTemp
+	multipart.FileName = "f_foto.png"
+	multipart.KeyName ="f_foto"
+	list.Initialize
+	list.Add(multipart)
+
+	
+	mapa.Put("f_idempresa",idempresa)
+	mapa.Put("f_idproducto",MapaProducto.Get("f_idrecord"))
+	mapDato.Put("dato",convertir(mapa))
+'	mapa.Put("f_foto",getByteImagen(imgMyfoto.Bitmap))
+		
+	Dim job As HttpJob
+	job.Initialize("actualizar",Me)
+	
+	hudEnviar.ProgressDialogShow("Enviando...")
+	job.PostMultipart(url&"/fotos/actualizar",mapDato,list)
+'	job.PostString(url&"/fotos/actualizar","dato="&convertir(mapa))
+	
+	
+End Sub
+
+Sub btnCancelarFoto_Click
+	
+	If enviado Then
+		PanelFondoImagen.Visible = False
+		enviado = False
+		Else
+		Msgbox2("Msg2","Desea cancelar este proceso? La foto todavia no ha sido guardada","Aviso!",Array("Si","No"))
+	End If
+		
+End Sub
+
+Sub Msg2_Click(ButtonText As String)
+
+	If ButtonText = "Si" Then
+		
+		PanelFondoImagen.Visible = False
+		
+	Else If ButtonText = "No" Then
+		Return
+	End If
+
+End Sub
+
+Sub getByteImagen(bmap As Bitmap) As Byte()
+	Dim out As OutputStream
+	Dim data() As Byte
+	out.InitializeToBytesArray(1)
+		bmap.WriteToStream(out,20,"PNG")
+	data = out.ToBytesArray
+
+	out.Close
+	
+	Return data
+'	Dim su As StringUtils
+	
+'	Return su.EncodeBase64(data)
+End Sub
+
+
+Sub getByteImagen2(bmap As Bitmap) As Byte()
+	Dim out As OutputStream
+	Dim data() As Byte
+	out.InitializeToBytesArray(1)
+	bmap.WriteToStream(out,100,"PNG")
+	data = out.ToBytesArray
+	
+	Return data
+End Sub
+
+#End Region
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

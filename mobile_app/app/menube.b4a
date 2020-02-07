@@ -1,0 +1,378 @@
+﻿Build1=Default,com.menube.app
+File1=8957930841b2cc6.jpg
+File10=frmLogin.bal
+File11=frmPrincipal.bal
+File12=frmProducoModal.bal
+File13=frmProductoOpciones.bal
+File14=frmProductoOrden.bal
+File15=frmRegistroCliente.bal
+File16=frmReporteOrdenes.bal
+File17=frmSlideOrden.bal
+File18=image.png
+File19=logo.png
+File2=after_night.ttf
+File20=Roboto-Light.ttf
+File21=Roboto-Regular.ttf
+File22=roboto-thin.ttf
+File23=Sushi.jpg
+File3=DancingScript-Bold.ttf
+File4=DancingScript-Regular.ttf
+File5=datepicker.bal
+File6=food.jpg
+File7=frmDirecciones.bal
+File8=frmDireccionesModal.bal
+File9=frmInfoEmpresa.bal
+FileGroup1=Default Group
+FileGroup10=Default Group
+FileGroup11=Default Group
+FileGroup12=Default Group
+FileGroup13=Default Group
+FileGroup14=Default Group
+FileGroup15=Default Group
+FileGroup16=Default Group
+FileGroup17=Default Group
+FileGroup18=Default Group
+FileGroup19=Default Group
+FileGroup2=Default Group
+FileGroup20=Default Group
+FileGroup21=Default Group
+FileGroup22=Default Group
+FileGroup23=Default Group
+FileGroup3=Default Group
+FileGroup4=Default Group
+FileGroup5=Default Group
+FileGroup6=Default Group
+FileGroup7=Default Group
+FileGroup8=Default Group
+FileGroup9=Default Group
+Group=Default Group
+IconFile=
+Library1=core
+Library10=okhttp
+Library11=dateutils
+Library12=sql
+Library13=xui
+Library14=contentresolver
+Library15=dialogs
+Library2=phone
+Library3=scrollview2d
+Library4=reflection
+Library5=animation
+Library6=encryption
+Library7=json
+Library8=stringutils
+Library9=okhttputils2
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="5" android:targetSdkVersion="19"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~AddPermission("android.permission.READ_CONTACTS")~\n~'End of default text.~\n~
+Module1=Starter
+Module2=Principal
+Module3=funcion
+Module4=SlideMenu
+Module5=Facturacion
+Module6=Direcciones
+Module7=ReporteOrdenes
+Module8=AnotherDatePicker
+NumberOfFiles=23
+NumberOfLibraries=15
+NumberOfModules=8
+Version=9.01
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: Menube
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: portrait
+	#CanInstallToExternalStorage: False
+	
+#End Region
+
+#Region Activity Attributes
+	#FullScreen: True
+	#IncludeTitle:  False
+	
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+'	Dim url As String = "http://10.0.0.7:8089/menube_app_server/"
+	
+	Dim token As String
+	Dim jobMsj As String = "No se pudo conectar con el servidor. Compruebe su conexión a internet."
+	Dim jobMsjTitle As String = "Problemas de conexión."
+	Type typeU (idUsuario As Int, nombre As String, latitud As String, longitud As String)
+	Dim usersData As typeU
+	Dim SQL As SQL
+	Dim url As String '= "http://10.0.0.4:8089/menube_app_server/"
+End Sub
+
+Sub Globals
+	'These global variables will be redeclared each time the activity is created.
+	'These variables can only be accessed from this module.
+	
+	Private Label3 As B4XView
+	Private btnLogin As B4XView
+	Private Panel1 As B4XView
+	Private Panel2 As B4XView
+	Private PanelLogin As B4XView
+	Private txtContrasena As B4XView
+	Private txtUsuario As EditText
+	Private ViewLogo As ImageView
+	Dim P As Phone
+	Dim PI As PhoneId
+	
+	'REGISTRO DE CLIENTE
+	Private btnRegistroClienteBack As B4XView
+	Private btnRegistroClienteRegistrarme As B4XView
+	Private PanelRegistroCliente As Panel
+	Private txtContrasena2 As EditText
+	Private txtDireccion As EditText
+	Private txtNombre As EditText
+	Private txtTelefono As EditText
+	Private txtUsuarioRegistro As EditText
+	Private txtContrasenaRegistro As EditText
+	Private lblRegistrarme As Label
+	
+	'CONFIGURACION
+	Private btnConfiguracion As B4XView
+	Private txtURL As Label
+	Private PanelConfiguracion As B4XView
+	
+End Sub
+
+
+Sub Activity_Create(FirstTime As Boolean)
+	
+	If File.Exists(File.DirDefaultExternal, "db.db") = False Then
+		File.Copy(File.DirAssets, "db.db", File.DirDefaultExternal, "db.db")
+	End If
+	SQL.Initialize(File.DirDefaultExternal,"db.db", True)
+	
+	Dim cur As Cursor
+	cur = SQL.ExecQuery("SELECT * FROM t_preferencia")
+	cur.Position = 0
+	url = cur.GetString("f_url")
+	
+	Activity.LoadLayout("frmLogin")
+	PanelConfiguracion.Top = -PanelConfiguracion.Height -btnConfiguracion.Top
+	txtURL.Text = url
+
+End Sub
+
+Sub btnConfiguracion_Click
+	
+	Dim posicion As Int = PanelConfiguracion.Height + btnConfiguracion.Top + 1%y
+	If PanelConfiguracion.Top > 0%y Then
+		posicion = -posicion 
+	End If
+	
+	PanelConfiguracion.Tag = posicion
+	Dim a As Animation
+	a.InitializeTranslate("url",0,0,0,posicion)
+	a.Duration = 300
+	a.Start(PanelConfiguracion)
+	
+End Sub
+
+Sub updateURL
+	SQL.ExecNonQuery2("UPDATE t_preferencia SET f_url = ?",Array As Object(txtURL.Text.Trim))
+	url = txtURL.Text.Trim
+	ToastMessageShow("URL actializado",False)
+End Sub
+
+Sub url_AnimationEnd
+	
+	If PanelConfiguracion.Tag < 0%x Then
+		PanelConfiguracion.Top = -PanelConfiguracion.Height -btnConfiguracion.Top
+		updateURL
+		
+	Else
+		PanelConfiguracion.Top = btnConfiguracion.Top
+	End If
+	
+	
+End Sub
+
+Sub Activity_Resume
+	'funcion.DisableView(False,PanelLogin)
+	'funcion.DisableView(False,PanelRegistroCliente)
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+
+Sub btnLogin_Click
+	
+'	txtUsuario.Text = "pdl-1091@hotmail.com"
+'	txtContrasena.Text = "plopez"
+	
+	If  txtContrasena.Text.Trim.Length = 0 Or txtUsuario.Text.Trim.Length = 0 Then
+		Msgbox("Faltan datos por ingresar","Aviso")
+	Else
+		ToastMessageShow("Conectando..",False)
+		Dim url2 As String
+		Dim dato As String
+		Dim data As String
+		Dim banda As String
+		Dim  imei As String
+		Dim operadora As String
+		
+		operadora=P.GetNetworkOperatorName
+		imei=PI.GetDeviceId
+		banda=P.GetPhoneType
+		
+		If operadora = "Null" Or operadora = ""   Then
+			operadora="0"
+		End If
+		
+		If imei= ""  Then
+			imei=P.GetSettings("android_id")
+		End If
+		
+		If banda= ""  Then
+			banda="0"
+		End If
+		''f_latitud':0,'f_longitud':5
+		
+		data = "'f_modelo':'"&P.Model& " - "&P.Manufacturer &"','f_banda':'"&banda&"', 'f_operadora': '"& operadora&"','f_tamano':"&funcion.GetDevicePhysicalSize&","& _
+		"'f_imei':'"&imei&"','f_usuario':'"&txtUsuario.Text.Trim&"','f_contrasena':'"&txtContrasena.Text.Trim&"'"
+	    
+		dato=funcion.crearJson("none",data)
+		url2 = url & "login/login/"
+		
+		Dim JobLogin As HttpJob
+		JobLogin.Initialize("JobLogin",Me)
+		JobLogin.PostString(url2 ,"json="&dato)
+	End If
+	
+End Sub
+
+Sub JobDone(Job As HttpJob)
+	
+	If Job.Success = False Then
+		Msgbox(jobMsj,jobMsjTitle)
+		Return
+	End If
+	
+	If funcion.verificarJob(Job.GetString)=False Then
+		Return
+	End If
+	
+	Dim map As Map
+	Dim json As JSONParser
+	json.Initialize(funcion.base64_Decode(Job.GetString))
+	map = json.NextObject
+	
+	Select Job.JobName
+		
+		Case "JobLogin"
+			token = map.Get("f_key")
+			map = map.Get("f_data")
+			usersData.idUsuario = map.Get("f_idrecord")
+			usersData.nombre = map.Get("f_nombre")
+			usersData.longitud = map.Get("f_longitud")
+			usersData.latitud = map.Get("f_latitud")
+			StartActivity(Principal)
+			
+		Case "JobNewUser"
+			'map = map.Get("f_data")
+			map = Job.Tag
+			txtUsuario.Text = map.Get("f_email")
+			txtContrasena.Text = map.Get("f_password")
+			btnRegistroClienteBack_Click
+			btnLogin_Click
+			
+	End Select
+	
+End Sub
+
+Sub btnRegistroClienteRegistrarme_Click
+	
+	If txtNombre.Text.Trim.Length = 0 Then
+		Msgbox("Introduzca su nombre","Información")
+		txtNombre.RequestFocus
+		Return
+	Else if txtTelefono.Text.Trim.Length = 0 Then
+		Msgbox("Introduzca su teléfono","Información")
+		txtTelefono.RequestFocus
+		Return
+	else if txtDireccion.Text.Trim.Length = 0 Then
+		Msgbox("Introduzca su dirección","Información")
+		txtDireccion.RequestFocus
+		Return
+	else if txtUsuarioRegistro.Text.Trim.Length = 0 Then
+		Msgbox("Introduzca su correo electrónico","Información")
+		txtUsuarioRegistro.RequestFocus
+		Return
+	else if txtContrasenaRegistro.Text.Trim.Length = 0 Then
+		Msgbox("Introduzca su contraseña","Información")
+		txtContrasenaRegistro.RequestFocus
+		Return
+	else if txtContrasena2.Text.Trim.Length = 0 Then
+		Msgbox("Introduzca su contraseña nuevamente","Información")
+		txtContrasena2.RequestFocus
+		Return
+	Else If txtContrasenaRegistro.Text <> txtContrasena2.Text Then
+		Msgbox("Las contraseñas no coinciden.","Información")
+		txtContrasenaRegistro.RequestFocus
+		Return
+	End If
+	
+	Dim json As JSONGenerator
+	Dim map As Map
+	map.Initialize
+	map.Put("f_nombre",txtNombre.Text.Trim)
+	map.Put("f_telefono", txtTelefono.Text.Trim)
+	map.Put("f_direccion", txtDireccion.Text.Trim)
+	map.Put("f_email",txtUsuarioRegistro.Text.Trim)
+	map.Put("f_password",txtContrasenaRegistro.Text.Trim)
+	map.Put("f_latitud","")
+	map.Put("f_longitud","")
+	map.Put("f_idrecord",0)
+	json.Initialize(map)
+	
+	Dim JobNewUser As HttpJob
+	JobNewUser.Initialize("JobNewUser",Me)
+	JobNewUser.Tag = map
+	JobNewUser.PostString(url&"ws/set_salvar_usuario" ,"json="&funcion.crearJson2(token, json.ToString))
+	
+	
+End Sub
+
+Sub openRegistrarCliente
+	
+	If PanelRegistroCliente.IsInitialized = False Then
+		Activity.LoadLayout("frmRegistroCliente")
+		PanelRegistroCliente.Visible = False
+	End If
+	
+	funcion.DisableView(PanelRegistroCliente.Visible,PanelRegistroCliente)
+	funcion.DisableView(Not(PanelRegistroCliente.Visible),PanelLogin)
+	PanelRegistroCliente.SetVisibleAnimated(300,Not(PanelRegistroCliente.Visible))
+	
+End Sub
+
+Sub btnRegistroClienteBack_Click
+	openRegistrarCliente
+	clearRegistro
+End Sub
+
+Sub lblRegistrarme_Click
+	openRegistrarCliente
+	
+End Sub
+
+
+Sub clearRegistro
+	
+	txtNombre.Text = ""
+	txtTelefono.Text = ""
+	txtDireccion.Text = ""
+	txtUsuarioRegistro.Text = ""
+	txtContrasenaRegistro.Text = ""
+	txtContrasena2.Text = ""
+	
+End Sub
+

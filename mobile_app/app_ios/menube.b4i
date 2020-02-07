@@ -1,0 +1,328 @@
+﻿Build1=Default,com.jq
+Build2=New_1,com.jq.app.menube
+File1=food.jpg
+File10=frmReporteOrdenes.bil
+File11=image.png
+File12=logo.png
+File2=frmDirecciones.bil
+File3=frmDireccionesModal.bil
+File4=frmInfoEmpresa.bil
+File5=frmLogin.bil
+File6=frmPrincipal.bil
+File7=frmProductoOpciones.bil
+File8=frmProductoOrden.bil
+File9=frmRegistroCliente.bil
+FileGroup1=Default Group
+FileGroup10=Default Group
+FileGroup11=Default Group
+FileGroup12=Default Group
+FileGroup2=Default Group
+FileGroup3=Default Group
+FileGroup4=Default Group
+FileGroup5=Default Group
+FileGroup6=Default Group
+FileGroup7=Default Group
+FileGroup8=Default Group
+FileGroup9=Default Group
+Group=Default Group
+Library1=icore
+Library10=itableview
+Library11=xui views
+Library2=ixui
+Library3=ihud
+Library4=iphone
+Library5=ijson
+Library6=istringutils
+Library7=ihttp
+Library8=ihttputils2
+Library9=isql
+Module1=Principal
+Module2=funcion
+Module3=Facturacion
+Module4=Direcciones
+Module5=ReporteOrdenes
+NumberOfFiles=12
+NumberOfLibraries=11
+NumberOfModules=5
+Version=5.81
+@EndOfDesignText@
+'Code module
+#Region  Project Attributes 
+	#ApplicationLabel: Marian Rest
+	#Version: 1.1.3
+	'Orientation possible values: Portrait, LandscapeLeft, LandscapeRight and PortraitUpsideDown
+	#iPhoneOrientations: Portrait
+	'#iPadOrientations: Portrait, LandscapeLeft, LandscapeRight, PortraitUpsideDown
+	#Target: iPhone
+	#ATSEnabled: True
+	#MinVersion: 8
+	#AppFont: dancingscript-regular.ttf
+	
+'	#CertificateFile: ios_distribution.cer
+'	#ProvisionFile: productionmenube.mobileprovision
+'	#ProvisionFile: developing.mobileprovision
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'Public variables can be accessed from all modules.
+	Public App As Application
+	Public NavControl As NavigationController
+	Private Page1 As Page
+	Private PageRegistro As Page
+
+	Private Label3 As Label
+	Private btnLogin As Button
+	Private lblRegistrarme As Label
+	Private txtContrasena As TextField
+	Private txtUsuario As TextField
+	Private txtURL As TextField
+	
+	Dim token As String
+	'dbea1e74de894c3a37f4696a10ed6dd7
+	Dim tokenPublico As String = "dbea1e74de894c3a37f4696a10ed6dd7"
+	Dim  isLoggedIn As Boolean = False
+	Dim jobMsj As String = "No se pudo conectar con el servidor. Compruebe su conexión a internet."
+	Dim jobMsjTitle As String = "Problemas de conexión"
+	Type typeU (idUsuario As Int, nombre As String, latitud As String, longitud As String)
+	Dim usersData As typeU 
+	Dim SQL As SQL
+	Private hud As HUD
+'	Dim url As String = "http://10.0.0.108:8089/menube_app_server_ios/"
+	Dim url As String = "http://162.211.121.18:8090/menube_app_server_ios/"
+	
+	'REGISTRAR CLIENTE
+	Private btnRegistroClienteRegistrarme As Button
+	Private txtContrasena2 As TextField
+	Private txtContrasenaRegistro As TextField
+	Private txtDireccion As TextField
+	Private txtNombre As TextField
+	Private txtTelefono As TextField
+	Private txtUsuarioRegistro As TextField
+	
+End Sub
+
+Private Sub Application_Start (Nav As NavigationController)
+	'SetDebugAutoFlushLogs(True) 'Uncomment if program crashes before all logs are printed.
+	If File.Exists(File.DirDocuments, "db.db") = False Then
+		File.Copy(File.DirAssets, "db.db", File.DirDocuments, "db.db")
+	End If
+	SQL.Initialize(File.DirDocuments, "db.db", False)
+	
+	Dim rs As ResultSet = SQL.ExecQuery("SELECT * FROM t_preferencia")
+	Do While rs.NextRow
+'		url = rs.GetString("f_url")
+	Loop
+	
+	NavControl = Nav
+	Page1.Initialize("Page1")
+	Page1.RootPanel.Color = Colors.White
+	Page1.RootPanel.LoadLayout("frmLogin")
+	
+	NavControl.NavigationBarVisible = False
+	NavControl.ShowPage2(Page1,True)
+ 	funcion.SetTitleColor(Nav,Colors.White)
+	
+	crear
+End Sub
+
+Sub crear
+	txtURL.Alpha = 0
+	txtURL.Text = url
+	Label3.Font = Font.CreateNew2("DancingScript-Regular",50)
+	
+	Dim no As NativeObject = NavControl
+'	no.GetField("navigationBar").SetField("translucent", False)
+	no.GetField("navigationBar").RunMethod("setBarTintColor:", Array(no.ColorToUIColor(Colors.RGB(244,67,54))))
+	no.GetField("navigationBar").RunMethod("setTintColor:", Array(no.ColorToUIColor(Colors.White)))
+	
+'	txtUsuario.Text = "jdiaz@jqmicro.cosm"
+'	txtContrasena.Text = "test"
+	Principal.Initialize
+End Sub
+
+Sub Page1_Appear
+	NavControl.NavigationBarVisible = False
+	NavControl.ToolBarVisible = False
+End Sub
+
+Private Sub Page1_Resize(Width As Int, Height As Int)
+	Log("Page1_Resize")
+	
+End Sub
+
+Private Sub Application_Background
+	Log("Application_Background")
+End Sub
+
+Private Sub Application_Active
+	
+End Sub
+
+Sub lblRegistrarme_Click
+	NavControl.SetNavigationBarVisibleAnimated(True)
+	PageRegistro.Initialize("pageRegistroCliente")
+	PageRegistro.RootPanel.LoadLayout("frmRegistroCliente")
+	NavControl.ShowPage(PageRegistro)
+	PageRegistro.Tag = PageRegistro.RootPanel.Top
+End Sub
+
+Sub btnLogin_Click
+	'txtUsuario.Text = "jdiaz@jqmicro.com"
+	'txtContrasena.Text = "test"
+	
+	If  txtContrasena.Text.Trim.Length = 0 Or txtUsuario.Text.Trim.Length = 0 Then
+		Msgbox("Faltan datos por ingresar","Aviso")
+	Else
+		'hd.ToastMessageShow("Conectando..",False)
+		hud.ProgressDialogShow("Conectando..")
+		txtUsuario.UserInteractionEnabled = True
+		Dim url2 As String
+		Dim dato As String
+		Dim data As String
+		Dim  imei As String
+		Dim operadora As String
+		
+		Dim device As NativeObject
+		device = device.Initialize("UIDevice").RunMethod("currentDevice", Null)
+		operadora= App.OSVersion
+		imei = device.GetField("identifierForVendor").AsString
+		
+		data = "'f_modelo':'','f_banda':'', 'f_operadora': '"& operadora&"','f_tamano':0,"& _
+		"'f_imei':'"&imei&"','f_usuario':'"&txtUsuario.Text.Trim&"','f_contrasena':'"&txtContrasena.Text.Trim&"'"
+		
+		dato=funcion.crearJson("none",data)
+		url2 = url & "login/login/"
+		
+		Dim JobLogin As HttpJob
+		JobLogin.Initialize("JobLogin",Me)
+		JobLogin.PostString(url2 ,"json="&dato)
+	End If
+End Sub
+
+
+Sub JobDone(Job As HttpJob)
+	
+	hud.ProgressDialogHide
+	If Job.Success = False Then
+		Msgbox(jobMsj,jobMsjTitle)
+		Return
+	End If
+	
+	If funcion.verificarJob(Job.GetString)=False Then
+		Return
+	End If
+	
+	Dim map As Map
+	Dim json As JSONParser
+	json.Initialize(funcion.base64_Decode(Job.GetString))
+	map = json.NextObject
+	
+	Select Job.JobName
+		
+		Case "JobLogin"
+			isLoggedIn = True
+			token = map.Get("f_key")
+			map = map.Get("f_data")
+			usersData.idUsuario = map.Get("f_idrecord")
+			usersData.nombre = map.Get("f_nombre")
+			usersData.longitud = map.Get("f_longitud")
+			usersData.latitud = map.Get("f_latitud")
+			Principal.Initialize
+			
+			
+		Case "JobNewUser"
+			NavControl.NavigationBarVisible = False
+			map = map.Get("f_data")
+			map = Job.Tag
+			txtUsuario.Text = map.Get("f_email")
+			txtContrasena.Text = map.Get("f_password")
+			NavControl.RemoveCurrentPage
+			'btnRegistroClienteBack_Click
+			btnLogin_Click
+			
+	End Select
+	
+End Sub
+
+Sub Page1_KeyboardStateChanged (Height As Float)
+	
+	funcion.KeyboardStateChanged(Height,Page1,-1)
+	
+End Sub
+
+Sub btnRegistroClienteRegistrarme_Click
+	
+	If txtNombre.Text.Trim.Length = 0 Then
+		Msgbox("Introduzca su nombre","Información")
+		txtNombre.RequestFocus
+		Return
+	Else if txtTelefono.Text.Trim.Length = 0 Then
+		Msgbox("Introduzca su teléfono","Información")
+		txtTelefono.RequestFocus
+		Return
+	else if txtDireccion.Text.Trim.Length = 0 Then
+		Msgbox("Introduzca su dirección","Información")
+		txtDireccion.RequestFocus
+		Return
+	else if txtUsuarioRegistro.Text.Trim.Length = 0 Then
+		Msgbox("Introduzca su correo electrónico","Información")
+		txtUsuarioRegistro.RequestFocus
+		Return
+	else if txtContrasenaRegistro.Text.Trim.Length = 0 Then
+		Msgbox("Introduzca su contraseña","Información")
+		txtContrasenaRegistro.RequestFocus
+		Return
+	else if txtContrasena2.Text.Trim.Length = 0 Then
+		Msgbox("Introduzca su contraseña nuevamente","Información")
+		txtContrasena2.RequestFocus
+		Return
+	Else If txtContrasenaRegistro.Text <> txtContrasena2.Text Then
+		Msgbox("Las contraseñas no coinciden.","Información")
+		txtContrasenaRegistro.RequestFocus
+		Return
+	End If
+	
+	Dim json As JSONGenerator
+	Dim map As Map
+	map.Initialize
+	map.Put("f_nombre",txtNombre.Text.Trim)
+	map.Put("f_telefono", txtTelefono.Text.Trim)
+	map.Put("f_direccion", txtDireccion.Text.Trim)
+	map.Put("f_email",txtUsuarioRegistro.Text.Trim)
+	map.Put("f_password",txtContrasenaRegistro.Text.Trim)
+	map.Put("f_latitud","")
+	map.Put("f_longitud","")
+	map.Put("f_idrecord",0)
+	json.Initialize(map)
+	
+	Dim JobNewUser As HttpJob
+	JobNewUser.Initialize("JobNewUser",Me)
+	JobNewUser.Tag = map
+	JobNewUser.PostString(url&"ws/set_salvar_usuario" ,"json="&funcion.crearJson2(token, json.ToString))
+	
+End Sub
+
+
+Sub pageRegistroCliente_KeyboardStateChanged (Height As Float)
+	
+	funcion.KeyboardStateChanged(Height,PageRegistro,PageRegistro.Tag)
+	
+End Sub
+
+Sub btnConfiguracion_Click
+	
+	If txtURL.Alpha = 0 Then
+		txtURL.SetAlphaAnimated(300,1)
+	Else
+		txtURL.SetAlphaAnimated(300,0)
+		updateURL
+	End If
+	
+End Sub
+
+Sub updateURL
+	SQL.ExecNonQuery2("UPDATE t_preferencia SET f_url = ?",Array As Object(txtURL.Text.Trim))
+	url = txtURL.Text.Trim
+	hud.ToastMessageShow("URL actializado",False)
+End Sub

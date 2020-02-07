@@ -1,0 +1,90 @@
+package com.jq.pedidos.designerscripts;
+import anywheresoftware.b4a.objects.TextViewWrapper;
+import anywheresoftware.b4a.objects.ImageViewWrapper;
+import anywheresoftware.b4a.BA;
+
+
+public class LS_frmperfilclient{
+
+public static void LS_general(java.util.LinkedHashMap<String, anywheresoftware.b4a.keywords.LayoutBuilder.ViewWrapperAndAnchor> views, int width, int height, float scale) {
+anywheresoftware.b4a.keywords.LayoutBuilder.setScaleRate(0.3);
+anywheresoftware.b4a.keywords.LayoutBuilder.scaleAll(views);
+views.get("panelfondouser").vw.setTop((int)(0d));
+views.get("panelfondouser").vw.setHeight((int)((100d / 100 * height) - (0d)));
+views.get("panelfondouser").vw.setLeft((int)(0d));
+views.get("panelfondouser").vw.setWidth((int)((100d / 100 * width) - (0d)));
+views.get("panelencabezadouser").vw.setTop((int)(0d));
+views.get("panelencabezadouser").vw.setHeight((int)((8d / 100 * height) - (0d)));
+views.get("panelencabezadouser").vw.setLeft((int)(0d));
+views.get("panelencabezadouser").vw.setWidth((int)((100d / 100 * height) - (0d)));
+views.get("btndireccionback").vw.setLeft((int)(0d));
+views.get("btndireccionback").vw.setTop((int)(0d));
+views.get("btndireccionback").vw.setWidth((int)((15d / 100 * width)));
+views.get("btndireccionback").vw.setHeight((int)((views.get("panelencabezadouser").vw.getHeight())));
+views.get("label1").vw.setLeft((int)((16d / 100 * width)));
+views.get("label1").vw.setTop((int)(0d));
+views.get("label1").vw.setHeight((int)((views.get("panelencabezadouser").vw.getHeight())));
+views.get("label1").vw.setWidth((int)((80d / 100 * width)));
+views.get("label6").vw.setLeft((int)((2d / 100 * width)));
+views.get("label6").vw.setTop((int)((views.get("panelencabezadouser").vw.getTop() + views.get("panelencabezadouser").vw.getHeight())+(1d / 100 * height)));
+views.get("label6").vw.setWidth((int)((96d / 100 * width)));
+views.get("label6").vw.setHeight((int)((5d / 100 * height)));
+views.get("label2").vw.setLeft((int)((views.get("label6").vw.getLeft())));
+views.get("label2").vw.setTop((int)((views.get("label6").vw.getTop() + views.get("label6").vw.getHeight())+(5d / 100 * height)));
+views.get("label2").vw.setHeight((int)((5d / 100 * height)));
+views.get("label2").vw.setWidth((int)((23d / 100 * width)));
+views.get("label3").vw.setLeft((int)((views.get("label6").vw.getLeft())));
+views.get("label3").vw.setTop((int)((views.get("label2").vw.getTop() + views.get("label2").vw.getHeight())+(5d / 100 * height)));
+views.get("label3").vw.setHeight((int)((5d / 100 * height)));
+views.get("label3").vw.setWidth((int)((views.get("label2").vw.getWidth())));
+views.get("label4").vw.setLeft((int)((views.get("label6").vw.getLeft())));
+views.get("label4").vw.setTop((int)((views.get("label3").vw.getTop() + views.get("label3").vw.getHeight())+(5d / 100 * height)));
+views.get("label4").vw.setHeight((int)((5d / 100 * height)));
+views.get("label4").vw.setWidth((int)((views.get("label2").vw.getWidth())));
+views.get("label5").vw.setLeft((int)((views.get("label6").vw.getLeft())));
+views.get("label5").vw.setTop((int)((views.get("label4").vw.getTop() + views.get("label4").vw.getHeight())+(5d / 100 * height)));
+views.get("label5").vw.setHeight((int)((5d / 100 * height)));
+views.get("label5").vw.setWidth((int)((views.get("label2").vw.getWidth())));
+views.get("panelnombre").vw.setLeft((int)((27d / 100 * width)));
+views.get("panelnombre").vw.setTop((int)((views.get("label2").vw.getTop())));
+views.get("panelnombre").vw.setHeight((int)((6d / 100 * height)));
+views.get("panelnombre").vw.setWidth((int)((71d / 100 * width)));
+views.get("txtnombre").vw.setLeft((int)((1d / 100 * width)));
+views.get("txtnombre").vw.setTop((int)(0d));
+views.get("txtnombre").vw.setWidth((int)((views.get("panelnombre").vw.getWidth())-(2d / 100 * width)));
+views.get("txtnombre").vw.setHeight((int)((views.get("panelnombre").vw.getHeight())+(2d / 100 * height)));
+views.get("panelemail").vw.setLeft((int)((views.get("panelnombre").vw.getLeft())));
+views.get("panelemail").vw.setTop((int)((views.get("label3").vw.getTop())));
+views.get("panelemail").vw.setHeight((int)((views.get("panelnombre").vw.getHeight())));
+views.get("panelemail").vw.setWidth((int)((views.get("panelnombre").vw.getWidth())));
+views.get("lblemail").vw.setLeft((int)((1d / 100 * width)));
+views.get("lblemail").vw.setTop((int)(0d));
+views.get("lblemail").vw.setWidth((int)((views.get("panelemail").vw.getWidth())-(2d / 100 * width)));
+views.get("lblemail").vw.setHeight((int)((views.get("panelemail").vw.getHeight())));
+views.get("paneltel").vw.setLeft((int)((views.get("panelnombre").vw.getLeft())));
+views.get("paneltel").vw.setTop((int)((views.get("label4").vw.getTop())));
+views.get("paneltel").vw.setHeight((int)((views.get("panelnombre").vw.getHeight())));
+views.get("paneltel").vw.setWidth((int)((views.get("panelnombre").vw.getWidth())));
+views.get("txttel").vw.setLeft((int)((1d / 100 * width)));
+views.get("txttel").vw.setTop((int)(0d));
+views.get("txttel").vw.setWidth((int)((views.get("paneltel").vw.getWidth())-(2d / 100 * width)));
+views.get("txttel").vw.setHeight((int)((views.get("paneltel").vw.getHeight())+(2d / 100 * height)));
+views.get("paneldir").vw.setLeft((int)((views.get("panelnombre").vw.getLeft())));
+views.get("paneldir").vw.setTop((int)((views.get("label5").vw.getTop())));
+views.get("paneldir").vw.setHeight((int)((views.get("panelnombre").vw.getHeight())));
+views.get("paneldir").vw.setWidth((int)((views.get("panelnombre").vw.getWidth())));
+views.get("txtdir").vw.setLeft((int)((1d / 100 * width)));
+views.get("txtdir").vw.setTop((int)(0d));
+views.get("txtdir").vw.setWidth((int)((views.get("paneldir").vw.getWidth())-(2d / 100 * width)));
+views.get("txtdir").vw.setHeight((int)((views.get("paneldir").vw.getHeight())+(2d / 100 * height)));
+views.get("btnchangepass").vw.setTop((int)((views.get("paneldir").vw.getTop() + views.get("paneldir").vw.getHeight())+(10d / 100 * height)));
+views.get("btnchangepass").vw.setLeft((int)((10d / 100 * width)));
+views.get("btnchangepass").vw.setWidth((int)((90d / 100 * width) - ((10d / 100 * width))));
+views.get("btnchangepass").vw.setHeight((int)((8d / 100 * height)));
+views.get("btnsave").vw.setLeft((int)((5d / 100 * width)));
+views.get("btnsave").vw.setWidth((int)((95d / 100 * width) - ((5d / 100 * width))));
+views.get("btnsave").vw.setTop((int)((views.get("btnchangepass").vw.getTop() + views.get("btnchangepass").vw.getHeight())+(15d / 100 * height)));
+views.get("btnsave").vw.setHeight((int)((8d / 100 * height)));
+
+}
+}

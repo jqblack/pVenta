@@ -1,0 +1,121 @@
+
+#import "iCore.h"
+@interface LS_frmslidenew:NSObject
+@end
+
+@implementation LS_frmslidenew
+
+- (void)LS_general:(B4ILayoutData*)views :(int)width :(int)height{
+[B4ILayoutBuilder setScaleRate:0.3];
+[B4ILayoutBuilder scaleAll:views :width :height];
+[views get:@"panelfondoslide"].Left = (int)(0.0);
+[views get:@"panelfondoslide"].Width = (int)((100 / 100.0 * width) - (0.0));
+[views get:@"panelfondoslide"].Top = (int)(0.0);
+[views get:@"panelfondoslide"].Height = (int)((100 / 100.0 * height) - (0.0));
+[views get:@"panelmarco"].Left = (int)(0.0);
+[views get:@"panelmarco"].Width = (int)((100 / 100.0 * width) - (0.0));
+[views get:@"panelmarco"].Top = (int)(0.0);
+[views get:@"panelmarco"].Height = (int)((100 / 100.0 * height) - (0.0));
+[views get:@"paneluser"].Top = (int)(0.0);
+[views get:@"paneluser"].Height = (int)((15 / 100.0 * height) - (0.0));
+[views get:@"paneluser"].Left = (int)(0.0);
+[views get:@"paneluser"].Width = (int)((100 / 100.0 * width) - (0.0));
+[views get:@"imageuser"].Left = (int)((3 / 100.0 * width));
+[views get:@"imageuser"].Top = (int)((5 / 100.0 * height));
+[views get:@"imageuser"].Width = (int)((15 / 100.0 * width));
+[views get:@"imageuser"].Height = (int)((7 / 100.0 * height));
+[views get:@"lblnombreuser"].Left = (int)(([views get:@"imageuser"].Left + [views get:@"imageuser"].Width)+(3 / 100.0 * width));
+[views get:@"lblnombreuser"].Top = (int)((4 / 100.0 * height));
+[views get:@"lblnombreuser"].Width = (int)((58 / 100.0 * width));
+[views get:@"lblnombreuser"].Height = (int)((5 / 100.0 * height));
+[views get:@"lblemailuser"].Left = (int)(([views get:@"lblnombreuser"].Left));
+[views get:@"lblemailuser"].Top = (int)(([views get:@"lblnombreuser"].Top + [views get:@"lblnombreuser"].Height));
+[views get:@"lblemailuser"].Width = (int)(([views get:@"lblnombreuser"].Width));
+[views get:@"lblemailuser"].Height = (int)(([views get:@"lblnombreuser"].Height));
+[views get:@"panel1"].Top = (int)(([views get:@"paneluser"].Top + [views get:@"paneluser"].Height)+(2 / 100.0 * height));
+[views get:@"panel1"].Left = (int)(0.0);
+[views get:@"panel1"].Width = (int)((100 / 100.0 * width) - (0.0));
+[views get:@"panel1"].Height = (int)((7 / 100.0 * height));
+[views get:@"imageview1"].Left = (int)((3 / 100.0 * width));
+[views get:@"imageview1"].Top = (int)((0.5 / 100.0 * height));
+[views get:@"imageview1"].Width = (int)((14 / 100.0 * width));
+[views get:@"imageview1"].Height = (int)((6 / 100.0 * height));
+[views get:@"label1"].Left = (int)(([views get:@"imageview1"].Left + [views get:@"imageview1"].Width)+(3 / 100.0 * width));
+[views get:@"label1"].Top = (int)((1 / 100.0 * height));
+[views get:@"label1"].Height = (int)((5 / 100.0 * height));
+[views get:@"label1"].Width = (int)((60 / 100.0 * width));
+[views get:@"panel2"].Top = (int)(([views get:@"panel1"].Top + [views get:@"panel1"].Height)+(0.5 / 100.0 * height));
+[views get:@"panel2"].Left = (int)(0.0);
+[views get:@"panel2"].Width = (int)((100 / 100.0 * width) - (0.0));
+[views get:@"panel2"].Height = (int)((7 / 100.0 * height));
+[views get:@"imageview2"].Left = (int)((3 / 100.0 * width));
+[views get:@"imageview2"].Top = (int)((0.5 / 100.0 * height));
+[views get:@"imageview2"].Width = (int)((14 / 100.0 * width));
+[views get:@"imageview2"].Height = (int)((6 / 100.0 * height));
+[views get:@"label2"].Left = (int)(([views get:@"imageview2"].Left + [views get:@"imageview2"].Width)+(3 / 100.0 * width));
+[views get:@"label2"].Top = (int)((1 / 100.0 * height));
+[views get:@"label2"].Height = (int)((5 / 100.0 * height));
+[views get:@"label2"].Width = (int)((60 / 100.0 * width));
+[views get:@"panel3"].Top = (int)(([views get:@"panel2"].Top + [views get:@"panel2"].Height)+(0.5 / 100.0 * height));
+[views get:@"panel3"].Left = (int)(0.0);
+[views get:@"panel3"].Width = (int)((100 / 100.0 * width) - (0.0));
+[views get:@"panel3"].Height = (int)((7 / 100.0 * height));
+[views get:@"imageview3"].Left = (int)((3 / 100.0 * width));
+[views get:@"imageview3"].Top = (int)((0.5 / 100.0 * height));
+[views get:@"imageview3"].Width = (int)((14 / 100.0 * width));
+[views get:@"imageview3"].Height = (int)((6 / 100.0 * height));
+[views get:@"label3"].Left = (int)(([views get:@"imageview3"].Left + [views get:@"imageview3"].Width)+(3 / 100.0 * width));
+[views get:@"label3"].Top = (int)((1 / 100.0 * height));
+[views get:@"label3"].Height = (int)((5 / 100.0 * height));
+[views get:@"label3"].Width = (int)((60 / 100.0 * width));
+[views get:@"panel4"].Top = (int)(([views get:@"panel3"].Top + [views get:@"panel3"].Height)+(0.5 / 100.0 * height));
+[views get:@"panel4"].Left = (int)(0.0);
+[views get:@"panel4"].Width = (int)((100 / 100.0 * width) - (0.0));
+[views get:@"panel4"].Height = (int)((7 / 100.0 * height));
+[views get:@"imageview4"].Left = (int)((3 / 100.0 * width));
+[views get:@"imageview4"].Top = (int)((0.5 / 100.0 * height));
+[views get:@"imageview4"].Width = (int)((14 / 100.0 * width));
+[views get:@"imageview4"].Height = (int)((6 / 100.0 * height));
+[views get:@"label4"].Left = (int)(([views get:@"imageview4"].Left + [views get:@"imageview4"].Width)+(3 / 100.0 * width));
+[views get:@"label4"].Top = (int)((1 / 100.0 * height));
+[views get:@"label4"].Height = (int)((5 / 100.0 * height));
+[views get:@"label4"].Width = (int)((60 / 100.0 * width));
+[views get:@"panel5"].Top = (int)(([views get:@"panel4"].Top + [views get:@"panel4"].Height)+(0.5 / 100.0 * height));
+[views get:@"panel5"].Left = (int)(0.0);
+[views get:@"panel5"].Width = (int)((100 / 100.0 * width) - (0.0));
+[views get:@"panel5"].Height = (int)((7 / 100.0 * height));
+[views get:@"imageview5"].Left = (int)((3 / 100.0 * width));
+[views get:@"imageview5"].Top = (int)((0.5 / 100.0 * height));
+[views get:@"imageview5"].Width = (int)((14 / 100.0 * width));
+[views get:@"imageview5"].Height = (int)((6 / 100.0 * height));
+[views get:@"label5"].Left = (int)(([views get:@"imageview5"].Left + [views get:@"imageview5"].Width)+(3 / 100.0 * width));
+[views get:@"label5"].Top = (int)((1 / 100.0 * height));
+[views get:@"label5"].Height = (int)((5 / 100.0 * height));
+[views get:@"label5"].Width = (int)((60 / 100.0 * width));
+[views get:@"panel6"].Top = (int)(([views get:@"panel5"].Top + [views get:@"panel5"].Height)+(0.5 / 100.0 * height));
+[views get:@"panel6"].Left = (int)(0.0);
+[views get:@"panel6"].Width = (int)((100 / 100.0 * width) - (0.0));
+[views get:@"panel6"].Height = (int)((7 / 100.0 * height));
+[views get:@"imageview6"].Left = (int)((3 / 100.0 * width));
+[views get:@"imageview6"].Top = (int)((0.5 / 100.0 * height));
+[views get:@"imageview6"].Width = (int)((14 / 100.0 * width));
+[views get:@"imageview6"].Height = (int)((6 / 100.0 * height));
+[views get:@"label6"].Left = (int)(([views get:@"imageview6"].Left + [views get:@"imageview6"].Width)+(3 / 100.0 * width));
+[views get:@"label6"].Top = (int)((1 / 100.0 * height));
+[views get:@"label6"].Height = (int)((5 / 100.0 * height));
+[views get:@"label6"].Width = (int)((60 / 100.0 * width));
+[views get:@"panel7"].Top = (int)(([views get:@"panel6"].Top + [views get:@"panel6"].Height)+(0.5 / 100.0 * height));
+[views get:@"panel7"].Left = (int)(0.0);
+[views get:@"panel7"].Width = (int)((100 / 100.0 * width) - (0.0));
+[views get:@"panel7"].Height = (int)((7 / 100.0 * height));
+[views get:@"imageview7"].Left = (int)((3 / 100.0 * width));
+[views get:@"imageview7"].Top = (int)((0.5 / 100.0 * height));
+[views get:@"imageview7"].Width = (int)((14 / 100.0 * width));
+[views get:@"imageview7"].Height = (int)((6 / 100.0 * height));
+[views get:@"label7"].Left = (int)(([views get:@"imageview7"].Left + [views get:@"imageview7"].Width)+(3 / 100.0 * width));
+[views get:@"label7"].Top = (int)((1 / 100.0 * height));
+[views get:@"label7"].Height = (int)((5 / 100.0 * height));
+[views get:@"label7"].Width = (int)((60 / 100.0 * width));
+
+}
+@end
